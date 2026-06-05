@@ -12,3 +12,11 @@ export async function getEditorials() {
     ORDER BY name
   `;
 }
+
+export async function createEditorial(name: string, country_id: number) {
+  return await sql`
+    INSERT INTO editorials (name, country_id)
+    VALUES (${name}, ${country_id})
+    RETURNING id
+  `;
+}

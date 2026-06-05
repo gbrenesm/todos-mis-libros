@@ -14,20 +14,35 @@ type Author = {
   lastname: string | null;
 };
 
+type Tag = {
+  id: string;
+  name: string;
+};
+
 type BookFormProps = {
   editorials: Editorial[];
   authors: Author[];
+  tags: Tag[];
 };
 
-export default function BookForm({ editorials, authors }: BookFormProps) {
+export default function BookForm({ editorials, authors, tags }: BookFormProps) {
   const [selectedAuthors, setSelectedAuthors] = useState<Author[]>([]);
   const [authorSearch, setAuthorSearch] = useState("");
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [tagSearch, setTagSearch] = useState("");
 
   const filteredAuthors = authors.filter((a) => {
     const fullName = `${a.name} ${a.lastname ?? ""}`.toLowerCase();
     return (
       fullName.includes(authorSearch.toLowerCase()) &&
       !selectedAuthors.some((s) => s.id === a.id)
+    );
+  });
+
+  const filteredTags = tags.filter((t) => {
+    return (
+      t.name.toLowerCase().includes(tagSearch.toLowerCase()) &&
+      !selectedTags.some((s) => s.id === t.id)
     );
   });
 
@@ -38,6 +53,22 @@ export default function BookForm({ editorials, authors }: BookFormProps) {
 
   function removeAuthor(id: string) {
     setSelectedAuthors(selectedAuthors.filter((a) => a.id !== id));
+  }
+
+  function addTag(tag: Tag) {
+    setSelectedTags([...selectedTags, tag]);
+    setTagSearch("");
+  }
+
+  function addNewTag() {
+    if (!tagSearch.trim()) return;
+    const newTag = { id: `new:${tagSearch.trim()}`, name: tagSearch.trim() };
+    setSelectedTags([...selectedTags, newTag]);
+    setTagSearch("");
+  }
+
+  function removeTag(id: string) {
+    setSelectedTags(selectedTags.filter((t) => t.id !== id));
   }
 
   return (
@@ -268,6 +299,74 @@ export default function BookForm({ editorials, authors }: BookFormProps) {
             <option value="false">No</option>
           </select>
         </div>
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <label className="text-sm text-muted">Tags</label>
+
+        {selectedTags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-2">
+            {selectedTags.map((t) => (
+              <span
+                key={t.id}
+                className="bg-accent text-white text-xs rounded-full px-3 py-1 flex items-center gap-1"
+              >
+                {t.name}
+                <button
+                  type="button"
+                  onClick={() => removeTag(t.id)}
+                  className="ml-1 hover:opacity-70"
+                >
+                  x
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div className="relative">
+          <input
+            type="text"
+            value={tagSearch}
+            onChange={(e) => setTagSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addNewTag();
+              }
+            }}
+            placeholder="Buscar o crear tag..."
+            className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm w-full"
+          />
+          {tagSearch && (
+            <ul className="absolute z-10 top-full left-0 right-0 mt-1 bg-card-bg border border-card-border rounded-lg max-h-40 overflow-y-auto">
+              {filteredTags.map((t) => (
+                <li key={t.id}>
+                  <button
+                    type="button"
+                    onClick={() => addTag(t)}
+                    className="w-full text-left px-5 py-2 text-sm hover:bg-accent hover:text-white transition-colors"
+                  >
+                    {t.name}
+                  </button>
+                </li>
+              ))}
+              {filteredTags.length === 0 && (
+                <li>
+                  <button
+                    type="button"
+                    onClick={addNewTag}
+                    className="w-full text-left px-5 py-2 text-sm hover:bg-accent hover:text-white transition-colors"
+                  >
+                    Crear "{tagSearch}"
+                  </button>
+                </li>
+              )}
+            </ul>
+          )}
+        </div>
+
+        <input type="hidden" name="tags" value={selectedTags.map((t) => t.name).join(",")} />
       </div>
 
       <div className="flex flex-col gap-1">

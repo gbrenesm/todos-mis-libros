@@ -15,6 +15,7 @@ type CreateBookInput = {
   editorial_id: string;
   author_ids: string[];
   read_date: string[];
+  tag_ids: string[];
 };
 
 export async function createBook(book: CreateBookInput) {
@@ -28,6 +29,13 @@ export async function createBook(book: CreateBookInput) {
     await sql`
       INSERT INTO book_authors (book_id, author_id)
       VALUES (${newBook.id}, ${authorId})
+    `;
+  }
+
+  for (const tagId of book.tag_ids) {
+    await sql`
+      INSERT INTO tags_books (book_id, tag_id)
+      VALUES (${newBook.id}, ${tagId})
     `;
   }
 

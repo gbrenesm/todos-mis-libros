@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createBook } from "@/services/books";
+import { findOrCreateTag } from "@/services/tags";
 
 export async function createBookAction(formData: FormData) {
   const readDateRaw = formData.get("read_date") as string;
@@ -10,6 +11,12 @@ export async function createBookAction(formData: FormData) {
     : [];
 
   const authorIds = formData.getAll("author_ids") as string[];
+
+  const tagsRaw = formData.get("tags") as string;
+  const tagNames = tagsRaw
+    ? tagsRaw.split(",").map((t) => t.trim()).filter(Boolean)
+    : [];
+  const tagIds = await Promise.all(tagNames.map(findOrCreateTag));
 
   await createBook({
     name: formData.get("name") as string,
@@ -25,6 +32,7 @@ export async function createBookAction(formData: FormData) {
     editorial_id: formData.get("editorial_id") as string,
     author_ids: authorIds,
     read_date: readDate,
+    tag_ids: tagIds,
   });
 
   redirect("/");
