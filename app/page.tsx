@@ -1,10 +1,8 @@
+import { getBooks } from '@/services/books'
 import BookCard from "../components/BookCard";
 
-export default function Home() {
-  const books = [
-      { id: 1, title: "La insoportable levedad del ser", author: "Milan Kundera", year: 1984 },
-      { id: 2, title: "Distancia de rescate", author: "Samanta Schweblin", year: 2014 },
-    ];
+export default async function Home() {
+  const books = await getBooks()
   return (
     <main>
       <h1 className="font-sans text-5xl">Todos mis libros</h1>
