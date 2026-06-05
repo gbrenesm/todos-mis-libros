@@ -2,17 +2,30 @@
 
 @layer base {
   :root {
-    --background: #1a1a1a;
-    --foreground: #ededed;
-    --card-bg: #2a2a2a;
-    --card-border: #3a3a3a;
-    --muted: #999999;
-    --accent: #4a7c59;
+    --background: #1C1818;
+    --foreground: #EEE0CB;
+    --card-bg: #2a5f59;
+    --card-border: #3d8a82;
+    --muted: #9EC5AB;
+    --accent: #104F55;
   }
 
   html {
     height: 100%;
     color-scheme: dark;
+    font-size: 16px;
+
+    @media (min-width: 1536px) {
+      font-size: 20px;
+    }
+
+    @media (min-width: 1920px) {
+      font-size: 24px;
+    }
+
+    @media (min-width: 2560px) {
+      font-size: 28px;
+    }
   }
 
   body {

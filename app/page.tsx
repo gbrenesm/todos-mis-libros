@@ -7,7 +7,7 @@ export default async function Home() {
   const favorites = books.filter((b) => b.rating === "preferido").length;
 
   return (
-    <main className="max-w-6xl mx-auto px-8 py-12 md:px-12">
+    <main className="mx-auto px-8 py-12 md:px-16 lg:px-24">
       <header className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold">Mi biblioteca</h1>
         <span className="text-sm text-var(--muted)">
