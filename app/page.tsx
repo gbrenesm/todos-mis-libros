@@ -10,9 +10,12 @@ export default async function Home() {
     <main className="mx-auto px-8 py-12 md:px-16 lg:px-24">
       <header className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold">Mi biblioteca</h1>
-        <span className="text-sm text-muted">
-          {booksRead} libros leídos
-        </span>
+        <a
+          href="/books/new"
+          className="bg-accent text-white rounded-lg px-6 py-3 text-sm font-medium hover:opacity-90 transition-opacity"
+        >
+          Nuevo libro
+        </a>
       </header>
 
       <section className="grid grid-cols-3 gap-4 mb-8">

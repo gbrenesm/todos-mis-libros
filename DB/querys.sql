@@ -155,3 +155,6 @@ ALTER TABLE authors
 ALTER TABLE books
   ADD COLUMN in_library BOOLEAN DEFAULT true,
   ALTER COLUMN purchased_date TYPE INT USING EXTRACT(YEAR FROM purchased_date)::INT;
+
+ALTER TABLE countrys
+  ADD COLUMN name_en VARCHAR(255);

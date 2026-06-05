@@ -36,11 +36,11 @@ export default function AuthorsMap({ data, title, color }: AuthorsMapProps) {
   return (
     <div className="flex flex-col gap-3">
       <h2 className="text-lg font-semibold">{title}</h2>
-      <div className="bg-card-bg rounded-xl p-4 border border-card-border">
+      <div className="rounded-xl overflow-hidden">
         <ComposableMap
           projection="geoMercator"
           projectionConfig={{ scale: 120, center: [0, 30] }}
-          style={{ width: "100%", height: "auto" }}
+          style={{ width: "100%", height: "auto", backgroundColor: "#1B98E0" }}
         >
           <ZoomableGroup>
             <Geographies geography={GEO_URL}>

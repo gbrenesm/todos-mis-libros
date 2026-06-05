@@ -28,14 +28,14 @@ type AuthorsByCountry = {
 export async function getAuthorsByCountryAndGender() {
   return await sql<AuthorsByCountry[]>`
     SELECT
-      c.name AS country,
+      c.name_en AS country,
       a.gender,
       COUNT(*)::int AS count
     FROM authors a
     JOIN countrys c ON a.country_id = c.id
-    WHERE a.deleted_at IS NULL
-    GROUP BY c.name, a.gender
-    ORDER BY c.name
+    WHERE a.deleted_at IS NULL AND c.name_en IS NOT NULL
+    GROUP BY c.name_en, a.gender
+    ORDER BY c.name_en
   `;
 }
 
