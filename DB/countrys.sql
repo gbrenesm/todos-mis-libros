@@ -1,0 +1,15 @@
+INSERT INTO countrys (name, continent_id) VALUES
+    ('Afganistán', 3),
+    ('Albania', 4),
+    ('Alemania', 4),
+    ('Andorra', 4),
+    ('Angola', 1),
+    ('Antigua y Barbuda', 2),
+    ('Arabia Saudita', 3),
+    ('Argelia', 1),
+    ('Argentina', 2),
+    ('Armenia', 4),
+    ('Australia', 5),
+    ('Austria', 4),
+    ('Azerbaiyán', 3),
+);

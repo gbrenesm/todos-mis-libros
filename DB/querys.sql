@@ -1,51 +1,63 @@
 CREATE TYPE reading_status AS ENUM ('leído', 'leyendo', 'por leer');
 CREATE TYPE genders AS ENUM ('mujer', 'hombre', 'no definido');
-CREATE TYPE rating AS ENUM ('preferido', 'muy bueno', 'bueno', 'más o menos', 'malo');
+CREATE TYPE ratings AS ENUM ('preferido', 'muy bueno', 'bueno', 'más o menos', 'malo');
+CREATE TYPE formats AS ENUM ('físico', 'digital', 'audiolibro');
 
-CREATE TABLE countrys (
+CREATE TABLE continents (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL
+  name VARCHAR(255) NOT NULL UNIQUE
 );
 
+INSERT INTO continents (name) VALUES ('África'), ('América'), ('Asia'), ('Europa'), ('Oceanía');
+
 CREATE TABLE countrys (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL UNIQUE,
 
-  continent INT NOT NULL,
-  
+  continent_id INT NOT NULL,
+
   CONSTRAINT fk_continent
     FOREIGN KEY (continent_id)
-    REFERENCES continent(id)
+    REFERENCES continents(id)
     ON UPDATE CASCADE
 );
 
 CREATE TABLE authors (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(255) NOT NULL,
-  lastaname VARCHAR(255),
-  birthday VARCHAR(255),
-  death VARCHAR(255),
+  lastname VARCHAR(255),
+  birthday INT,
+  death INT,
   gender genders DEFAULT 'no definido',
   nobel_prize INT,
-  
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
-  deleted_at TIMESTAMP DEFAULT NULL
-);
+  photo VARCHAR(255),
+  city VARCHAR(255),
 
-CREATE TABLE editorial (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name VARCHAR(255) NOT NULL,
-
-  country INT NOT NULL,
+  country_id INT NOT NULL,
 
   created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
-  deleted_at TIMESTAMP DEFAULT NULL
+  updated_at TIMESTAMP DEFAULT NOW(),
+  deleted_at TIMESTAMP DEFAULT NULL,
 
   CONSTRAINT fk_country
     FOREIGN KEY (country_id)
-    REFERENCES country(id)
+    REFERENCES countrys(id)
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE editorials (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(255) NOT NULL,
+
+  country_id INT NOT NULL,
+
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+  deleted_at TIMESTAMP DEFAULT NULL,
+
+  CONSTRAINT fk_country
+    FOREIGN KEY (country_id)
+    REFERENCES countrys(id)
     ON UPDATE CASCADE
 );
 
@@ -54,12 +66,19 @@ CREATE TABLE books (
   name VARCHAR(255) NOT NULL,
   year INT NOT NULL,
   read_date TEXT[],
-  
-  editorial UUID NOT NULL,
+  status reading_status DEFAULT 'por leer',
+  rating ratings DEFAULT 'bueno',
+  format formats DEFAULT 'físico',
+  reading_times INT DEFAULT 0,
+  purchased_date INT,
+  fiction BOOLEAN DEFAULT true,
+  cover VARCHAR(255),
+
+  editorial_id UUID NOT NULL,
 
   created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
-  deleted_at TIMESTAMP DEFAULT NULL
+  updated_at TIMESTAMP DEFAULT NOW(),
+  deleted_at TIMESTAMP DEFAULT NULL,
 
   CONSTRAINT fk_editorial
     FOREIGN KEY (editorial_id)
@@ -78,8 +97,61 @@ CREATE TABLE book_authors (
     REFERENCES books(id)
     ON UPDATE CASCADE,
 
-    CONSTRAINT fk_author
+  CONSTRAINT fk_author
     FOREIGN KEY (author_id)
     REFERENCES authors(id)
     ON UPDATE CASCADE
 );
+
+CREATE TABLE quotes (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    quote TEXT NOT NULL,
+    pages VARCHAR(255),
+    libreta BOOLEAN DEFAULT false,
+
+    book_id UUID NOT NULL,
+
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    deleted_at TIMESTAMP DEFAULT NULL,
+
+    CONSTRAINT fk_book
+      FOREIGN KEY (book_id)
+      REFERENCES books(id)
+      ON UPDATE CASCADE
+);
+
+CREATE TABLE tags (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE tags_books (
+    tag_id UUID NOT NULL,
+    book_id UUID NOT NULL,
+
+    PRIMARY KEY (book_id, tag_id),
+
+    CONSTRAINT fk_book
+      FOREIGN KEY (book_id)
+      REFERENCES books(id)
+      ON UPDATE CASCADE,
+
+    CONSTRAINT fk_tag
+      FOREIGN KEY (tag_id)
+      REFERENCES tags(id)
+      ON UPDATE CASCADE
+);
+
+CREATE INDEX idx_books_name ON books(name);
+CREATE INDEX idx_authors_name ON authors(name);
+CREATE INDEX idx_authors_lastname ON authors(lastname);
+CREATE INDEX idx_editorials_name ON editorials(name);
+
+ALTER TABLE authors
+  ALTER COLUMN birthday TYPE INT USING EXTRACT(YEAR FROM birthday)::INT,
+  ALTER COLUMN death TYPE INT USING EXTRACT(YEAR FROM death)::INT;
+
+ALTER TABLE books
+  ADD COLUMN in_library BOOLEAN DEFAULT true,
+  ALTER COLUMN purchased_date TYPE INT USING EXTRACT(YEAR FROM purchased_date)::INT;
