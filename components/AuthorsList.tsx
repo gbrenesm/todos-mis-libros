@@ -30,7 +30,7 @@ export default function AuthorsList({ authors, countrys, countryMap }: AuthorsLi
         <select
           value={countryFilter}
           onChange={(e) => setCountryFilter(e.target.value)}
-          className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg px-5 pr-10 py-3 text-sm"
+          className="bg-card-bg border border-card-border rounded-lg px-5 pr-10 py-3 text-sm"
         >
           <option value="">Todos los países</option>
           {countrys.map((country) => (
@@ -43,7 +43,7 @@ export default function AuthorsList({ authors, countrys, countryMap }: AuthorsLi
         <select
           value={genderFilter}
           onChange={(e) => setGenderFilter(e.target.value)}
-          className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg px-5 pr-10 py-3 text-sm"
+          className="bg-card-bg border border-card-border rounded-lg px-5 pr-10 py-3 text-sm"
         >
           <option value="">Todos los géneros</option>
           <option value="mujer">Mujer</option>
@@ -56,7 +56,7 @@ export default function AuthorsList({ authors, countrys, countryMap }: AuthorsLi
         {filtered.map((author) => (
           <div
             key={author.id}
-            className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl p-4 flex flex-col gap-2"
+            className="bg-card-bg border border-card-border rounded-xl p-4 flex flex-col gap-2"
           >
             <div className="flex items-center gap-3">
               {author.photo ? (
@@ -66,7 +66,7 @@ export default function AuthorsList({ authors, countrys, countryMap }: AuthorsLi
                   className="w-12 h-12 rounded-full object-cover"
                 />
               ) : (
-                <div className="w-12 h-12 rounded-full bg-[var(--accent)] flex items-center justify-center text-white font-bold text-lg">
+                <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center text-white font-bold text-lg">
                   {author.name.charAt(0)}
                 </div>
               )}
@@ -74,13 +74,13 @@ export default function AuthorsList({ authors, countrys, countryMap }: AuthorsLi
                 <h3 className="text-sm font-semibold">
                   {author.name} {author.lastname}
                 </h3>
-                <p className="text-xs text-[var(--muted)]">
+                <p className="text-xs text-muted">
                   {countryMap[author.country_id]}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 text-xs text-[var(--muted)] mt-1">
+            <div className="flex items-center gap-3 text-xs text-muted mt-1">
               {author.birthday && (
                 <span>
                   {author.birthday}

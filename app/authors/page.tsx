@@ -14,7 +14,7 @@ export default async function AuthorsPage() {
         <h1 className="text-2xl font-bold">Autoras, autores y autorxs</h1>
         <Link
           href="/authors/new"
-          className="bg-var(--accent) text-white rounded-lg px-6 py-3 text-sm font-medium hover:opacity-90 transition-opacity"
+          className="bg-accent text-white rounded-lg px-6 py-3 text-sm font-medium hover:opacity-90 transition-opacity"
         >
           Nuevo autor
         </Link>

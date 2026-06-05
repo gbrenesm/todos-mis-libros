@@ -52,7 +52,7 @@ export default function BookCard({ book }: BookCardProps) {
         <h3 className="text-sm font-semibold leading-tight line-clamp-2">
           {book.name}
         </h3>
-        <p className="text-xs text-[var(--muted)] mt-0.5">
+        <p className="text-xs text-muted mt-0.5">
           {book.author_name} {book.author_lastname}
         </p>
       </div>

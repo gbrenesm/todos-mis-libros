@@ -10,24 +10,24 @@ export default async function Home() {
     <main className="mx-auto px-8 py-12 md:px-16 lg:px-24">
       <header className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold">Mi biblioteca</h1>
-        <span className="text-sm text-var(--muted)">
+        <span className="text-sm text-muted">
           {booksRead} libros leídos
         </span>
       </header>
 
       <section className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-var(--card-bg) rounded-xl p-4">
-          <p className="text-xs text-var(--muted)">Este año</p>
+        <div className="bg-card-bg rounded-xl p-4">
+          <p className="text-xs text-muted">Este año</p>
           <p className="text-2xl font-bold mt-1">
             {books.filter((b) => b.read_date?.some((d) => d.includes("2026"))).length}
           </p>
         </div>
-        <div className="bg-var(--card-bg) rounded-xl p-4">
-          <p className="text-xs text-var(--muted)">Favoritos</p>
+        <div className="bg-card-bg rounded-xl p-4">
+          <p className="text-xs text-muted">Favoritos</p>
           <p className="text-2xl font-bold mt-1">{favorites}</p>
         </div>
-        <div className="bg-var(--card-bg) rounded-xl p-4">
-          <p className="text-xs text-var(--muted)">Total</p>
+        <div className="bg-card-bg rounded-xl p-4">
+          <p className="text-xs text-muted">Total</p>
           <p className="text-2xl font-bold mt-1">{books.length}</p>
         </div>
       </section>
