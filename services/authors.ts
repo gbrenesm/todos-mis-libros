@@ -19,6 +19,26 @@ export async function getAuthors() {
   `;
 }
 
+type AuthorsByCountry = {
+  country: string;
+  gender: string;
+  count: number;
+};
+
+export async function getAuthorsByCountryAndGender() {
+  return await sql<AuthorsByCountry[]>`
+    SELECT
+      c.name AS country,
+      a.gender,
+      COUNT(*)::int AS count
+    FROM authors a
+    JOIN countrys c ON a.country_id = c.id
+    WHERE a.deleted_at IS NULL
+    GROUP BY c.name, a.gender
+    ORDER BY c.name
+  `;
+}
+
 export async function createAuthor(author: Omit<Author, "id">) {
   return await sql`
     INSERT INTO authors (name, lastname, birthday, death, gender, nobel_prize, photo, city, country_id)
