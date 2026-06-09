@@ -5,6 +5,7 @@ const links = [
   { href: "/authors", label: "Autorxs" },
   { href: "/maps", label: "Mapas" },
   { href: "/charts", label: "Gráficos" },
+  { href: "/editorials", label: "Editoriales" }
 ];
 
 export default function Navbar() {

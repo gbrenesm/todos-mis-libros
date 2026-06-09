@@ -13,6 +13,7 @@ INSERT INTO continents (name) VALUES ('África'), ('América'), ('Asia'), ('Euro
 CREATE TABLE countrys (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL UNIQUE,
+  name_en VARCHAR(255),
 
   continent_id INT NOT NULL,
 
@@ -73,6 +74,7 @@ CREATE TABLE books (
   purchased_date INT,
   fiction BOOLEAN DEFAULT true,
   cover VARCHAR(255),
+  in_library BOOLEAN DEFAULT true,
 
   editorial_id UUID NOT NULL,
 
@@ -147,14 +149,3 @@ CREATE INDEX idx_books_name ON books(name);
 CREATE INDEX idx_authors_name ON authors(name);
 CREATE INDEX idx_authors_lastname ON authors(lastname);
 CREATE INDEX idx_editorials_name ON editorials(name);
-
-ALTER TABLE authors
-  ALTER COLUMN birthday TYPE INT USING EXTRACT(YEAR FROM birthday)::INT,
-  ALTER COLUMN death TYPE INT USING EXTRACT(YEAR FROM death)::INT;
-
-ALTER TABLE books
-  ADD COLUMN in_library BOOLEAN DEFAULT true,
-  ALTER COLUMN purchased_date TYPE INT USING EXTRACT(YEAR FROM purchased_date)::INT;
-
-ALTER TABLE countrys
-  ADD COLUMN name_en VARCHAR(255);

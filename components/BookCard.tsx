@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Book } from "@/types/book";
 
 type BookCardProps = {
@@ -27,7 +28,7 @@ export default function BookCard({ book }: BookCardProps) {
   const coverColor = coverColors[colorIndex];
 
   return (
-    <div className="flex flex-col gap-2">
+    <Link href={`/books/${book.id}`} className="flex flex-col gap-2">
       <div
         className={`${coverColor} rounded-xl aspect-2/3 flex items-center justify-center`}
       >
@@ -66,6 +67,6 @@ export default function BookCard({ book }: BookCardProps) {
           {"☆".repeat(5 - stars)}
         </span>
       </div>
-    </div>
+    </Link>
   );
 }
