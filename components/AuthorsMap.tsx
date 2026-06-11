@@ -40,7 +40,7 @@ export default function AuthorsMap({ data, title, color }: AuthorsMapProps) {
         <ComposableMap
           projection="geoMercator"
           projectionConfig={{ scale: 120, center: [0, 30] }}
-          style={{ width: "100%", height: "auto", backgroundColor: "#1B98E0" }}
+          style={{ width: "100%", height: "auto", backgroundColor: "#388697" }}
         >
           <ZoomableGroup>
             <Geographies geography={GEO_URL}>

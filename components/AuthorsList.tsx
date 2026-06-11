@@ -15,17 +15,30 @@ type AuthorsListProps = {
 };
 
 export default function AuthorsList({ authors, countrys, countryMap }: AuthorsListProps) {
+  const [search, setSearch] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
   const [genderFilter, setGenderFilter] = useState("");
 
   const filtered = authors.filter((a) => {
     if (countryFilter && a.country_id !== Number(countryFilter)) return false;
     if (genderFilter && a.gender !== genderFilter) return false;
+    if (search) {
+      const fullName = `${a.name} ${a.lastname ?? ""}`.toLowerCase();
+      if (!fullName.includes(search.toLowerCase())) return false;
+    }
     return true;
   });
 
   return (
     <>
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Buscar autor..."
+        className="w-full bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm mb-4"
+      />
+
       <div className="flex gap-4 mb-6">
         <select
           value={countryFilter}

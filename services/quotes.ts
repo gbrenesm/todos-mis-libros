@@ -16,3 +16,14 @@ export async function createQuote(bookId: string, quote: string, pages: string |
     VALUES (${bookId}, ${quote}, ${pages}, ${libreta})
   `;
 }
+
+export async function updateQuote(id: string, quote: string, pages: string | null, libreta: boolean) {
+  await sql`
+    UPDATE quotes SET
+      quote = ${quote},
+      pages = ${pages},
+      libreta = ${libreta},
+      updated_at = NOW()
+    WHERE id = ${id}
+  `;
+}

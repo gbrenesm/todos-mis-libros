@@ -1,9 +1,8 @@
 import { getBooks } from "@/services/books";
-import BookCard from "@/components/BookCard";
+import BooksGrid from "@/components/BooksGrid";
 
 export default async function Home() {
   const books = await getBooks();
-  const booksRead = books.filter((b) => b.status === "leído").length;
   const favorites = books.filter((b) => b.rating === "preferido").length;
 
   return (
@@ -19,27 +18,23 @@ export default async function Home() {
       </header>
 
       <section className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-card-bg rounded-xl p-4">
+        <div className="bg-accent/10 border border-accent/20 rounded-xl p-4">
           <p className="text-xs text-muted">Este año</p>
           <p className="text-2xl font-bold mt-1">
             {books.filter((b) => b.read_date?.some((d) => d.includes("2026"))).length}
           </p>
         </div>
-        <div className="bg-card-bg rounded-xl p-4">
+        <div className="bg-accent/10 border border-accent/20 rounded-xl p-4">
           <p className="text-xs text-muted">Favoritos</p>
           <p className="text-2xl font-bold mt-1">{favorites}</p>
         </div>
-        <div className="bg-card-bg rounded-xl p-4">
+        <div className="bg-accent/10 border border-accent/20 rounded-xl p-4">
           <p className="text-xs text-muted">Total</p>
           <p className="text-2xl font-bold mt-1">{books.length}</p>
         </div>
       </section>
 
-      <section className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-        {books.map((book) => (
-          <BookCard key={book.id} book={book} />
-        ))}
-      </section>
+      <BooksGrid books={books} />
     </main>
   );
 }

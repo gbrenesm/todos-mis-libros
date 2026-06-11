@@ -1,27 +1,38 @@
 import Link from "next/link";
 
-const links = [
-  { href: "/", label: "Libros" },
-  { href: "/authors", label: "Autorxs" },
-  { href: "/maps", label: "Mapas" },
-  { href: "/charts", label: "Gráficos" },
-  { href: "/editorials", label: "Editoriales" }
-];
-
 export default function Navbar() {
   return (
-    <nav className="border-b border-card-border px-8 md:px-16 lg:px-24 py-4">
+    <nav className="bg-accent text-white px-8 md:px-16 lg:px-24 py-4 flex items-center justify-between">
+      <Link href="/" className="text-lg font-handwritten hover:opacity-80 transition-opacity">
+        Todos mis libros
+      </Link>
+
       <ul className="flex gap-8">
-        {links.map((link) => (
-          <li key={link.href}>
-            <Link
-              href={link.href}
-              className="text-sm font-medium hover:opacity-70 transition-opacity"
-            >
-              {link.label}
-            </Link>
-          </li>
-        ))}
+        <li>
+          <Link href="/" className="text-sm font-medium hover:opacity-80 transition-opacity">
+            Libros
+          </Link>
+        </li>
+        <li>
+          <Link href="/authors" className="text-sm font-medium hover:opacity-80 transition-opacity">
+            Autorxs
+          </Link>
+        </li>
+        <li>
+          <Link href="/editorials" className="text-sm font-medium hover:opacity-80 transition-opacity">
+            Editoriales
+          </Link>
+        </li>
+        <li>
+          <Link href="/maps" className="text-sm font-medium hover:opacity-80 transition-opacity">
+            Mapas
+          </Link>
+        </li>
+        <li>
+          <Link href="/charts" className="text-sm font-medium hover:opacity-80 transition-opacity">
+            Gráficos
+          </Link>
+        </li>
       </ul>
     </nav>
   );

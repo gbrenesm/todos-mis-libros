@@ -112,7 +112,7 @@ export default function BookDetail({ book }: { book: BookData }) {
   return (
     <div className="flex flex-col gap-4 flex-1">
       <div className="flex items-start justify-between">
-        <h1 className="text-3xl font-bold">{book.name}</h1>
+        <h1 className="text-3xl font-handwritten">{book.name}</h1>
         <button
           type="button"
           onClick={() => setEditing(true)}
@@ -121,7 +121,7 @@ export default function BookDetail({ book }: { book: BookData }) {
           Editar
         </button>
       </div>
-      <p className="text-muted text-lg">{book.authors}</p>
+      <p className="text-muted text-lg font-handwritten">{book.authors}</p>
 
       <div className="grid grid-cols-2 gap-x-10 gap-y-3 mt-4 text-sm">
         <Detail label="Editorial" value={book.editorial} />
@@ -160,7 +160,7 @@ function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <span className="text-muted">{label}:</span>{" "}
-      <span className="font-medium">{value}</span>
+      <span className="font-handwritten text-base">{value}</span>
     </div>
   );
 }

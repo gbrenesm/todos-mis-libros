@@ -2,24 +2,26 @@
 
 @theme {
   --color-accent: #104F55;
-  --color-card-bg: #2a5f59;
-  --color-card-border: #3d8a82;
-  --color-muted: #9EC5AB;
+  --color-card-bg: #F5F5F3;
+  --color-card-border: #E5E5E3;
+  --color-muted: #6B7280;
+  --color-quote-bg: #1A936F;
+  --font-handwritten: var(--font-handwritten);
 }
 
 @layer base {
   :root {
-    --background: #1C1818;
-    --foreground: #EEE0CB;
-    --card-bg: #2a5f59;
-    --card-border: #3d8a82;
-    --muted: #9EC5AB;
+    --background: #FAFAF8;
+    --foreground: #1C1C1C;
+    --card-bg: #F3FAE1;
+    --card-border: #E5E5E3;
+    --muted: #6B7280;
     --accent: #104F55;
   }
 
   html {
     height: 100%;
-    color-scheme: dark;
+    color-scheme: light;
     font-size: 16px;
 
     @media (min-width: 1536px) {

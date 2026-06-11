@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createQuote } from "@/services/quotes";
+import { createQuote, updateQuote } from "@/services/quotes";
 import { updateBook } from "@/services/books";
 
 export async function createQuoteAction(formData: FormData) {
@@ -37,4 +37,15 @@ export async function updateBookAction(formData: FormData) {
   });
 
   revalidatePath(`/books/${id}`);
+}
+
+export async function updateQuoteAction(formData: FormData) {
+  const quoteId = formData.get("quote_id") as string;
+  const bookId = formData.get("book_id") as string;
+  const quote = formData.get("quote") as string;
+  const pages = (formData.get("pages") as string) || null;
+  const libreta = formData.get("libreta") === "true";
+
+  await updateQuote(quoteId, quote, pages, libreta);
+  revalidatePath(`/books/${bookId}`);
 }

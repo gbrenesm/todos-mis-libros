@@ -12,6 +12,7 @@ export type Book = {
   in_library: boolean;
   cover: string | null;
   editorial: string;
+  author_id: string;
   author_name: string;
   author_lastname: string | null;
 };

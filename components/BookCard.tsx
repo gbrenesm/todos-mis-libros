@@ -28,38 +28,44 @@ export default function BookCard({ book }: BookCardProps) {
   const coverColor = coverColors[colorIndex];
 
   return (
-    <Link href={`/books/${book.id}`} className="flex flex-col gap-2">
-      <div
-        className={`${coverColor} rounded-xl aspect-2/3 flex items-center justify-center`}
-      >
-        {book.cover ? (
-          <img
-            src={book.cover}
-            alt={book.name}
-            className="w-full h-full object-cover rounded-xl"
-          />
-        ) : (
-          <svg
-            className="w-10 h-10 opacity-60"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M21 4H3a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1zM4 18V6h7v12H4zm9 0V6h7v12h-7z" />
-          </svg>
-        )}
-      </div>
+    <div className="flex flex-col gap-2 max-w-48">
+      <Link href={`/books/${book.id}`}>
+        <div
+          className={`${coverColor} rounded-xl aspect-2/3 flex items-center justify-center`}
+        >
+          {book.cover ? (
+            <img
+              src={book.cover}
+              alt={book.name}
+              className="w-full h-full object-cover rounded-xl"
+            />
+          ) : (
+            <svg
+              className="w-10 h-10 opacity-60"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M21 4H3a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1zM4 18V6h7v12H4zm9 0V6h7v12h-7z" />
+            </svg>
+          )}
+        </div>
+      </Link>
 
       <div>
-        <h3 className="text-sm font-semibold leading-tight line-clamp-2">
-          {book.name}
-        </h3>
+        <Link href={`/books/${book.id}`}>
+          <h3 className="text-sm font-semibold leading-tight line-clamp-2 hover:underline">
+            {book.name}
+          </h3>
+        </Link>
         <p className="text-xs text-muted mt-0.5">
-          {book.author_name} {book.author_lastname}
+          <Link href={`/authors/${book.author_id}`} className="hover:underline">
+            {book.author_name} {book.author_lastname}
+          </Link>
         </p>
       </div>
 
       <div className="flex items-center justify-between">
-        <span className="text-[10px] border border-var(--card-border) rounded-full px-2 py-0.5">
+        <span className="text-[10px] border border-card-border rounded-full px-2 py-0.5">
           {book.fiction ? "Ficción" : "No ficción"}
         </span>
         <span className="text-xs text-amber-400">
@@ -67,6 +73,6 @@ export default function BookCard({ book }: BookCardProps) {
           {"☆".repeat(5 - stars)}
         </span>
       </div>
-    </Link>
+    </div>
   );
 }

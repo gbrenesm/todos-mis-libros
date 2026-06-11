@@ -19,6 +19,29 @@ export async function getAuthors() {
   `;
 }
 
+type AuthorDetail = Author & { country: string };
+
+export async function getAuthorById(id: string) {
+  const rows = await sql<AuthorDetail[]>`
+    SELECT
+      a.id,
+      a.name,
+      a.lastname,
+      a.birthday,
+      a.death,
+      a.gender,
+      a.nobel_prize,
+      a.photo,
+      a.city,
+      a.country_id,
+      c.name AS country
+    FROM authors a
+    LEFT JOIN countrys c ON a.country_id = c.id
+    WHERE a.id = ${id} AND a.deleted_at IS NULL
+  `;
+  return rows[0] ?? null;
+}
+
 type AuthorsByCountry = {
   country: string;
   gender: string;
