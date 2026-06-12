@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { Author } from "@/types/author";
 
 type Country = {
@@ -67,9 +68,10 @@ export default function AuthorsList({ authors, countrys, countryMap }: AuthorsLi
 
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filtered.map((author) => (
-          <div
+          <Link
             key={author.id}
-            className="bg-card-bg border border-card-border rounded-xl p-4 flex flex-col gap-2"
+            href={`/authors/${author.id}`}
+            className="bg-card-bg border border-card-border rounded-xl p-4 flex flex-col gap-2 hover:border-accent/40 transition-colors"
           >
             <div className="flex items-center gap-3">
               {author.photo ? (
@@ -102,7 +104,7 @@ export default function AuthorsList({ authors, countrys, countryMap }: AuthorsLi
               )}
               {author.nobel_prize && <span>Nobel {author.nobel_prize}</span>}
             </div>
-          </div>
+          </Link>
         ))}
       </section>
     </>

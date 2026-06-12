@@ -69,3 +69,20 @@ export async function createAuthor(author: Omit<Author, "id">) {
     RETURNING id
   `;
 }
+
+export async function updateAuthor(author: Author) {
+  await sql`
+    UPDATE authors SET
+      name = ${author.name},
+      lastname = ${author.lastname},
+      birthday = ${author.birthday},
+      death = ${author.death},
+      gender = ${author.gender},
+      nobel_prize = ${author.nobel_prize},
+      photo = ${author.photo},
+      city = ${author.city},
+      country_id = ${author.country_id},
+      updated_at = NOW()
+    WHERE id = ${author.id}
+  `;
+}

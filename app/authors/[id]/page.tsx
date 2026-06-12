@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { getAuthorById } from "@/services/authors";
 import { getBooksByAuthorId } from "@/services/books";
+import { getCountrys } from "@/services/countrys";
+import AuthorDetail from "@/components/AuthorDetail";
 import BookCard from "@/components/BookCard";
 
 type Props = {
@@ -9,7 +11,10 @@ type Props = {
 
 export default async function AuthorDetailPage({ params }: Props) {
   const { id } = await params;
-  const author = await getAuthorById(id);
+  const [author, countrys] = await Promise.all([
+    getAuthorById(id),
+    getCountrys(),
+  ]);
 
   if (!author) notFound();
 
@@ -34,44 +39,7 @@ export default async function AuthorDetailPage({ params }: Props) {
           )}
         </div>
 
-        <div className="flex flex-col gap-3">
-          <h1 className="text-3xl font-handwritten">{fullName}</h1>
-
-          <div className="grid grid-cols-2 gap-x-10 gap-y-2 text-sm mt-2">
-            <div>
-              <span className="text-muted">País:</span>{" "}
-              <span className="font-handwritten text-base">{author.country}</span>
-            </div>
-            {author.city && (
-              <div>
-                <span className="text-muted">Ciudad:</span>{" "}
-                <span className="font-handwritten text-base">{author.city}</span>
-              </div>
-            )}
-            {author.birthday && (
-              <div>
-                <span className="text-muted">Nacimiento:</span>{" "}
-                <span className="font-handwritten text-base">{author.birthday}</span>
-              </div>
-            )}
-            {author.death && (
-              <div>
-                <span className="text-muted">Muerte:</span>{" "}
-                <span className="font-handwritten text-base">{author.death}</span>
-              </div>
-            )}
-            <div>
-              <span className="text-muted">Género:</span>{" "}
-              <span className="font-handwritten text-base">{author.gender}</span>
-            </div>
-            {author.nobel_prize && (
-              <div>
-                <span className="text-muted">Nobel:</span>{" "}
-                <span className="font-handwritten text-base">{author.nobel_prize}</span>
-              </div>
-            )}
-          </div>
-        </div>
+        <AuthorDetail author={author} countrys={countrys} />
       </div>
 
       <section>
