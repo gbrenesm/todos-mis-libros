@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { updateBookAction } from "@/app/books/[id]/actions";
+import { updateBookAction, deleteBookAction } from "@/app/books/[id]/actions";
 
 type BookData = {
   id: string;
@@ -15,6 +15,8 @@ type BookData = {
   purchased_date: number | null;
   fiction: boolean;
   in_library: boolean;
+  has_stories: boolean;
+  purchased_from: string | null;
   cover: string | null;
   editorial: string;
   authors: string;
@@ -26,12 +28,13 @@ export default function BookDetail({ book }: { book: BookData }) {
 
   if (editing) {
     return (
+      <div className="flex flex-col gap-4 flex-1">
       <form
         action={async (formData) => {
           await updateBookAction(formData);
           setEditing(false);
         }}
-        className="flex flex-col gap-4 flex-1"
+        className="flex flex-col gap-4"
       >
         <input type="hidden" name="id" value={book.id} />
 
@@ -92,6 +95,11 @@ export default function BookDetail({ book }: { book: BookData }) {
             { value: "true", label: "Sí" },
             { value: "false", label: "No" },
           ]} />
+          <SelectField label="Cuentos o relatos" name="has_stories" defaultValue={String(book.has_stories)} options={[
+            { value: "true", label: "Sí" },
+            { value: "false", label: "No" },
+          ]} />
+          <Field label="Comprado en o regalado por" name="purchased_from" type="text" defaultValue={book.purchased_from || ""} />
           <div className="col-span-2">
             <Field
               label="Fechas de lectura"
@@ -106,6 +114,24 @@ export default function BookDetail({ book }: { book: BookData }) {
           </div>
         </div>
       </form>
+
+      <div className="mt-6 pt-4 border-t border-card-border">
+        <form action={deleteBookAction}>
+          <input type="hidden" name="id" value={book.id} />
+          <button
+            type="submit"
+            onClick={(e) => {
+              if (!confirm("¿Estás seguro de que quieres eliminar este libro?")) {
+                e.preventDefault();
+              }
+            }}
+            className="text-red-600 text-sm font-medium hover:text-red-800 transition-colors"
+          >
+            Eliminar libro
+          </button>
+        </form>
+      </div>
+      </div>
     );
   }
 
@@ -135,8 +161,12 @@ export default function BookDetail({ book }: { book: BookData }) {
         <Detail label="Veces leído" value={String(book.reading_times)} />
         <Detail label="Ficción" value={book.fiction ? "Sí" : "No"} />
         <Detail label="En biblioteca" value={book.in_library ? "Sí" : "No"} />
+        <Detail label="Cuentos o relatos" value={book.has_stories ? "Sí" : "No"} />
         {book.purchased_date && (
           <Detail label="Año de compra" value={String(book.purchased_date)} />
+        )}
+        {book.purchased_from && (
+          <Detail label="Comprado en o regalado por" value={book.purchased_from} />
         )}
         {book.read_date && book.read_date.length > 0 && (
           <Detail label="Fechas de lectura" value={book.read_date.join(", ")} />

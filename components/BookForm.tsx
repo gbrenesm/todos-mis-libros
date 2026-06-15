@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createBookAction } from "@/app/books/new/actions";
 
 type Editorial = {
@@ -30,6 +30,40 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
   const [authorSearch, setAuthorSearch] = useState("");
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [tagSearch, setTagSearch] = useState("");
+
+  useEffect(() => {
+    const saved = sessionStorage.getItem("bookFormDraft");
+    if (saved) {
+      sessionStorage.removeItem("bookFormDraft");
+      const draft = JSON.parse(saved);
+      if (draft.selectedAuthors) setSelectedAuthors(draft.selectedAuthors);
+      if (draft.selectedTags) setSelectedTags(draft.selectedTags);
+      if (draft.fields) {
+        setTimeout(() => {
+          const form = document.querySelector("form");
+          if (!form) return;
+          for (const [name, value] of Object.entries(draft.fields)) {
+            const el = form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | null;
+            if (el && "value" in el) el.value = value as string;
+          }
+        }, 0);
+      }
+    }
+  }, []);
+
+  function saveFormAndRedirect() {
+    const form = document.querySelector("form");
+    const fields: Record<string, string> = {};
+    if (form) {
+      const inputs = form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("input, select, textarea");
+      inputs.forEach((el) => {
+        if (el.name && el.type !== "hidden") fields[el.name] = el.value;
+      });
+    }
+    const draft = { selectedAuthors, selectedTags, fields };
+    sessionStorage.setItem("bookFormDraft", JSON.stringify(draft));
+    window.location.href = "/authors/new?returnTo=/books/new";
+  }
 
   const filteredAuthors = authors.filter((a) => {
     const fullName = `${a.name} ${a.lastname ?? ""}`.toLowerCase();
@@ -164,7 +198,7 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
               placeholder="Buscar autor..."
               className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm w-full"
             />
-            {authorSearch && filteredAuthors.length > 0 && (
+            {authorSearch && (
               <ul className="absolute z-10 top-full left-0 right-0 mt-1 bg-card-bg border border-card-border rounded-lg max-h-40 overflow-y-auto">
                 {filteredAuthors.map((a) => (
                   <li key={a.id}>
@@ -177,6 +211,17 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
                     </button>
                   </li>
                 ))}
+                {filteredAuthors.length === 0 && (
+                  <li>
+                    <button
+                      type="button"
+                      onClick={saveFormAndRedirect}
+                      className="w-full text-left px-5 py-2 text-sm hover:bg-accent hover:text-white transition-colors"
+                    >
+                      Crear "{authorSearch}"
+                    </button>
+                  </li>
+                )}
               </ul>
             )}
           </div>
@@ -298,6 +343,35 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
             <option value="true">Sí</option>
             <option value="false">No</option>
           </select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col gap-1">
+          <label htmlFor="has_stories" className="text-sm text-muted">
+            Cuentos o relatos
+          </label>
+          <select
+            id="has_stories"
+            name="has_stories"
+            defaultValue="false"
+            className="bg-card-bg border border-card-border rounded-lg px-5 pr-10 py-3 text-sm"
+          >
+            <option value="false">No</option>
+            <option value="true">Sí</option>
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="purchased_from" className="text-sm text-muted">
+            Comprado en o regalado por
+          </label>
+          <input
+            type="text"
+            id="purchased_from"
+            name="purchased_from"
+            className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm"
+          />
         </div>
       </div>
 

@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import { getBookById } from "@/services/books";
 import { getQuotesByBookId } from "@/services/quotes";
+import { getStorysByBookId } from "@/services/storys";
 import BookDetail from "@/components/BookDetail";
 import QuoteSection from "@/components/QuoteSection";
+import StorySection from "@/components/StorySection";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -15,6 +17,7 @@ export default async function BookDetailPage({ params }: Props) {
   if (!book) notFound();
 
   const quotes = await getQuotesByBookId(id);
+  const storys = book.has_stories ? await getStorysByBookId(id) : [];
 
   return (
     <main className="px-8 py-12 md:px-16 lg:px-24 max-w-5xl mx-auto">
@@ -39,6 +42,12 @@ export default async function BookDetailPage({ params }: Props) {
       </div>
 
       <QuoteSection bookId={id} quotes={quotes} />
+
+      {book.has_stories && (
+        <div className="mt-12">
+          <StorySection bookId={id} storys={storys} />
+        </div>
+      )}
     </main>
   );
 }

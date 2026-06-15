@@ -145,6 +145,27 @@ CREATE TABLE tags_books (
       ON UPDATE CASCADE
 );
 
+CREATE TABLE storys (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    rating ratings DEFAULT 'bueno',
+
+    book_id UUID NOT NULL,
+
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    deleted_at TIMESTAMP DEFAULT NULL,
+
+    CONSTRAINT fk_book
+      FOREIGN KEY (book_id)
+      REFERENCES books(id)
+      ON UPDATE CASCADE
+);
+
+ALTER TABLE books ADD COLUMN has_stories BOOLEAN DEFAULT false;
+ALTER TABLE books ADD COLUMN purchased_from VARCHAR(255);
+
 CREATE INDEX idx_books_name ON books(name);
 CREATE INDEX idx_authors_name ON authors(name);
 CREATE INDEX idx_authors_lastname ON authors(lastname);

@@ -10,11 +10,13 @@ type Country = {
 
 type AuthorFormProps = {
   countrys: Country[];
+  returnTo?: string;
 };
 
-export default function AuthorForm({ countrys }: AuthorFormProps) {
+export default function AuthorForm({ countrys, returnTo }: AuthorFormProps) {
   return (
     <form action={createAuthorAction} className="flex flex-col gap-5">
+      {returnTo && <input type="hidden" name="returnTo" value={returnTo} />}
       <div className="flex flex-col gap-1">
         <label htmlFor="name" className="text-sm text-muted">
           Nombre *
@@ -68,36 +70,6 @@ export default function AuthorForm({ countrys }: AuthorFormProps) {
 
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-1">
-          <label htmlFor="gender" className="text-sm text-muted">
-            Género
-          </label>
-          <select
-            id="gender"
-            name="gender"
-            defaultValue="no definido"
-            className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm"
-          >
-            <option value="hombre">Hombre</option>
-            <option value="mujer">Mujer</option>
-            <option value="no definido">No definido</option>
-          </select>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label htmlFor="nobel_prize" className="text-sm text-muted">
-            Premio Nobel (año)
-          </label>
-          <input
-            type="number"
-            id="nobel_prize"
-            name="nobel_prize"
-            className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm"
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1">
           <label htmlFor="country_id" className="text-sm text-muted">
             País *
           </label>
@@ -124,6 +96,36 @@ export default function AuthorForm({ countrys }: AuthorFormProps) {
             type="text"
             id="city"
             name="city"
+            className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col gap-1">
+          <label htmlFor="gender" className="text-sm text-muted">
+            Género
+          </label>
+          <select
+            id="gender"
+            name="gender"
+            defaultValue="no definido"
+            className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm"
+          >
+            <option value="hombre">Hombre</option>
+            <option value="mujer">Mujer</option>
+            <option value="no definido">No definido</option>
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="nobel_prize" className="text-sm text-muted">
+            Premio Nobel (año)
+          </label>
+          <input
+            type="number"
+            id="nobel_prize"
+            name="nobel_prize"
             className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm"
           />
         </div>

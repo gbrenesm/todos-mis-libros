@@ -16,5 +16,6 @@ export async function createAuthorAction(formData: FormData) {
     country_id: Number(formData.get("country_id")),
   });
 
-  redirect("/authors");
+  const returnTo = formData.get("returnTo") as string | null;
+  redirect(returnTo || "/authors");
 }

@@ -10,6 +10,8 @@ export type Book = {
   purchased_date: number | null;
   fiction: boolean;
   in_library: boolean;
+  has_stories: boolean;
+  purchased_from: string | null;
   cover: string | null;
   editorial: string;
   author_id: string;
