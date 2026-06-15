@@ -26,7 +26,7 @@ export default async function ChartsPage() {
         <BarChartSection title="Libros por año de lectura" data={byYear} />
         <PieChartSection title="Libros por calificación" data={byRating} />
         <HorizontalBarChartSection title="Libros por país" data={byCountry} />
-        <HorizontalBarChartSection title="Libros por etiqueta" data={byTanpmg} />
+        <HorizontalBarChartSection title="Libros por etiqueta" data={byTag} />
         <PieChartSection title="Libros por género del autxr" data={byGender} />
         <PieChartSection title="Autorxs" data={authorsByGender} />
       </div>

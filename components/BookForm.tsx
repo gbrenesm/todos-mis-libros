@@ -89,7 +89,7 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-1">
           <label htmlFor="year" className="text-sm text-muted">
-            Año de publicación *
+            Primera edición *
           </label>
           <input
             type="number"

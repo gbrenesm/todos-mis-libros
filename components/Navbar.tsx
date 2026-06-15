@@ -9,11 +9,6 @@ export default function Navbar() {
 
       <ul className="flex gap-8">
         <li>
-          <Link href="/" className="text-base font-medium hover:opacity-80 transition-opacity">
-            Libros
-          </Link>
-        </li>
-        <li>
           <Link href="/authors" className="text-base font-medium hover:opacity-80 transition-opacity">
             Autorxs
           </Link>

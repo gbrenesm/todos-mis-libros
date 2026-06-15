@@ -63,7 +63,7 @@ export default function BookDetail({ book }: { book: BookData }) {
         <p className="text-muted text-lg">{book.authors}</p>
 
         <div className="grid grid-cols-2 gap-x-6 gap-y-4 mt-4 text-sm">
-          <Field label="Año" name="year" type="number" defaultValue={String(book.year)} />
+          <Field label="Primera edición" name="year" type="number" defaultValue={String(book.year)} />
           <Field label="Año de compra" name="purchased_date" type="number" defaultValue={book.purchased_date ? String(book.purchased_date) : ""} />
 
           <SelectField label="Estado" name="status" defaultValue={book.status} options={[
@@ -118,14 +118,17 @@ export default function BookDetail({ book }: { book: BookData }) {
           onClick={() => setEditing(true)}
           className="bg-accent text-white rounded-lg px-5 py-2 text-sm font-medium hover:opacity-90 transition-opacity"
         >
-          Editar
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+            <path d="m15 5 4 4" />
+          </svg>
         </button>
       </div>
       <p className="text-muted text-lg font-handwritten">{book.authors}</p>
 
       <div className="grid grid-cols-2 gap-x-10 gap-y-3 mt-4 text-sm">
         <Detail label="Editorial" value={book.editorial} />
-        <Detail label="Año" value={String(book.year)} />
+        <Detail label="Primera edición" value={String(book.year)} />
         <Detail label="Estado" value={book.status} />
         <Detail label="Calificación" value={book.rating} />
         <Detail label="Formato" value={book.format} />
