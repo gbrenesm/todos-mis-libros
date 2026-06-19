@@ -2,22 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { createBookAction } from "@/app/books/new/actions";
-
-type Editorial = {
-  id: string;
-  name: string;
-};
-
-type Author = {
-  id: string;
-  name: string;
-  lastname: string | null;
-};
-
-type Tag = {
-  id: string;
-  name: string;
-};
+import type { Editorial } from "@/types/editorial";
+import type { Author } from "@/types/author"
+import type { Tag } from "@/types/tag";
 
 type BookFormProps = {
   editorials: Editorial[];

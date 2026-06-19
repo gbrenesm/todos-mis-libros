@@ -9,4 +9,5 @@ export type Author = {
   photo: string | null;
   city: string | null;
   country_id: number;
+  country: string;
 };

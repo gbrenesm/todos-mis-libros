@@ -3,11 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Author } from "@/types/author";
+import type { Country } from "@/types/country";
 
-type Country = {
-  id: number;
-  name: string;
-};
 
 type AuthorsListProps = {
   authors: Author[];

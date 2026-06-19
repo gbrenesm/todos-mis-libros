@@ -2,28 +2,11 @@
 
 import { useState } from "react";
 import { updateAuthorAction } from "@/app/authors/[id]/actions";
-
-type AuthorData = {
-  id: string;
-  name: string;
-  lastname: string | null;
-  birthday: number | null;
-  death: number | null;
-  gender: "mujer" | "hombre" | "no definido";
-  nobel_prize: number | null;
-  photo: string | null;
-  city: string | null;
-  country_id: number;
-  country: string;
-};
-
-type Country = {
-  id: number;
-  name: string;
-};
+import type { Author } from "@/types/author";
+import type { Country } from "@/types/country";
 
 type Props = {
-  author: AuthorData;
+  author: Author;
   countrys: Country[];
 };
 

@@ -1,12 +1,7 @@
 "use client";
 
 import { createEditorialAction } from "@/app/editorials/new/actions";
-
-type Country = {
-  id: number;
-  name: string;
-  continent: string;
-};
+import type { Country } from "@/types/country"; 
 
 type EditorialFormProps = {
   countrys: Country[];

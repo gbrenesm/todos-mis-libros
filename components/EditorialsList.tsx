@@ -2,13 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-type Editorial = {
-  id: string;
-  name: string;
-  country: string;
-  last_cover: string | null;
-};
+import type { Editorial } from "@/types/editorial";
 
 type Props = {
   editorials: Editorial[];

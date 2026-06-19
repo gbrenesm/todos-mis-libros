@@ -17,4 +17,5 @@ export type Book = {
   author_id: string;
   author_name: string;
   author_lastname: string | null;
+  tags: string | null;
 };

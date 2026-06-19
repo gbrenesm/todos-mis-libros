@@ -7,8 +7,6 @@ import {
   Underline,
   Strikethrough,
   Code,
-  Heading1,
-  Heading2,
   Heading3,
   List,
   ListOrdered,
@@ -19,8 +17,6 @@ import {
   AlignCenter,
   AlignRight,
   AlignJustify,
-  Undo,
-  Redo,
 } from 'lucide-react'
 
 interface ToolbarButtonProps {

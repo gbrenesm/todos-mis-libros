@@ -7,7 +7,7 @@ import Link from '@tiptap/extension-link'
 import TextAlign from '@tiptap/extension-text-align'
 import Placeholder from '@tiptap/extension-placeholder'
 import CharacterCount from '@tiptap/extension-character-count'
-import { EditorToolbar } from './EditorToolbar'
+import { EditorToolbar } from '@/components/EditorToolbar'
 import { useCallback } from 'react'
 
 interface RichTextEditorProps {

@@ -1,12 +1,7 @@
 "use client";
 
 import { createAuthorAction } from "@/app/authors/new/actions";
-
-type Country = {
-  id: number;
-  name: string;
-  continent: string;
-};
+import type { Country } from "@/types/country";
 
 type AuthorFormProps = {
   countrys: Country[];

@@ -2,28 +2,9 @@
 
 import { useState } from "react";
 import { updateBookAction, deleteBookAction } from "@/app/books/[id]/actions";
+import type { Book } from "@/types/book";
 
-type BookData = {
-  id: string;
-  name: string;
-  year: number;
-  read_date: string[] | null;
-  status: string;
-  rating: string;
-  format: string;
-  reading_times: number;
-  purchased_date: number | null;
-  fiction: boolean;
-  in_library: boolean;
-  has_stories: boolean;
-  purchased_from: string | null;
-  cover: string | null;
-  editorial: string;
-  authors: string;
-  tags: string | null;
-};
-
-export default function BookDetail({ book }: { book: BookData }) {
+export default function BookDetail({ book }: { book: Book }) {
   const [editing, setEditing] = useState(false);
 
   if (editing) {
