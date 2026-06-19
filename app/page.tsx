@@ -4,7 +4,8 @@ import BooksGrid from "@/components/BooksGrid";
 export default async function Home() {
   const books = await getBooks();
   const favorites = books.filter((b) => b.rating === "preferido").length;
-
+  const yearBooks = books.filter((b) => b.read_date?.some((d) => d.includes("2026")))
+  console.log(yearBooks)
   return (
     <main className="mx-auto px-8 py-12 md:px-16 lg:px-24">
       <header className="flex items-center justify-between mb-8">

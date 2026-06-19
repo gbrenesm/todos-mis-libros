@@ -14,18 +14,18 @@ export default async function MapsPage() {
 
   return (
     <main className="mx-auto px-8 py-12 md:px-16 lg:px-24">
-      <h1 className="text-2xl font-bold mb-8">Mapas de autores</h1>
+      <h1 className="text-2xl font-bold mb-8">Mapas de autoras, autores y autorxs</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <AuthorsMap
           data={womenByCountry}
           title="Autoras"
-          color="#9EC5AB"
+          color="#654597"
         />
         <AuthorsMap
           data={menByCountry}
           title="Autores"
-          color="#32746D"
+          color="#E2711D"
         />
       </div>
     </main>

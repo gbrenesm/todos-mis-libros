@@ -5,7 +5,6 @@ import Link from "next/link";
 
 export default async function AuthorsPage() {
   const [authors, countrys] = await Promise.all([getAuthors(), getCountrys()]);
-
   const countryMap = Object.fromEntries(countrys.map((c) => [c.id, c.name]));
 
   return (
@@ -19,7 +18,12 @@ export default async function AuthorsPage() {
           Nuevo autor
         </Link>
       </header>
-
+      <section className="grid grid-cols-3 gap-4 mb-8">
+        <div className="bg-accent/10 border border-accent/20 rounded-xl p-4">
+          <p className="text-xs text-muted">Total</p>
+          <p className="text-2xl font-bold mt-1">{authors.length}</p>
+        </div>
+      </section>
       <AuthorsList authors={authors} countrys={countrys} countryMap={countryMap} />
     </main>
   );

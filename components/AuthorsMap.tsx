@@ -27,7 +27,7 @@ export default function AuthorsMap({ data, title, color }: AuthorsMapProps) {
 
   function getColor(geoName: string) {
     const count = countByCountry.get(geoName);
-    if (!count) return "#2a2a2a";
+    if (!count) return "#bdbfc2";
     const intensity = count / maxCount;
     const opacity = 0.3 + intensity * 0.7;
     return `color-mix(in srgb, ${color} ${Math.round(opacity * 100)}%, #1a1a1a)`;

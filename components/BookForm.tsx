@@ -119,6 +119,69 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
           className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm"
         />
       </div>
+      <div className="flex flex-col gap-1">
+        <label className="text-sm text-muted">Autor(es) *</label>
+
+        {selectedAuthors.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-2">
+            {selectedAuthors.map((a) => (
+              <span
+                key={a.id}
+                className="bg-accent text-white text-xs rounded-full px-3 py-1 flex items-center gap-1"
+              >
+                {a.name} {a.lastname}
+                <button
+                  type="button"
+                  onClick={() => removeAuthor(a.id)}
+                  className="ml-1 hover:opacity-70"
+                >
+                  x
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div className="relative">
+          <input
+            type="text"
+            value={authorSearch}
+            onChange={(e) => setAuthorSearch(e.target.value)}
+            placeholder="Buscar autor..."
+            className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm w-full"
+          />
+          {authorSearch && (
+            <ul className="absolute z-10 top-full left-0 right-0 mt-1 bg-card-bg border border-card-border rounded-lg max-h-40 overflow-y-auto">
+              {filteredAuthors.map((a) => (
+                <li key={a.id}>
+                  <button
+                    type="button"
+                    onClick={() => addAuthor(a)}
+                    className="w-full text-left px-5 py-2 text-sm hover:bg-accent hover:text-white transition-colors"
+                  >
+                    {a.name} {a.lastname}
+                  </button>
+                </li>
+              ))}
+              {filteredAuthors.length === 0 && (
+                <li>
+                  <button
+                    type="button"
+                    onClick={saveFormAndRedirect}
+                    className="w-full text-left px-5 py-2 text-sm hover:bg-accent hover:text-white transition-colors"
+                  >
+                    Crear "{authorSearch}"
+                  </button>
+                </li>
+              )}
+            </ul>
+          )}
+        </div>
+
+        {selectedAuthors.map((a) => (
+          <input key={a.id} type="hidden" name="author_ids" value={a.id} />
+        ))}
+      </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-1">
@@ -133,21 +196,6 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
             className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm"
           />
         </div>
-
-        <div className="flex flex-col gap-1">
-          <label htmlFor="purchased_date" className="text-sm text-muted">
-            Año de compra
-          </label>
-          <input
-            type="number"
-            id="purchased_date"
-            name="purchased_date"
-            className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm"
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-1">
           <label htmlFor="editorial_id" className="text-sm text-muted">
             Editorial *
@@ -166,72 +214,8 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
             ))}
           </select>
         </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-muted">Autor(es) *</label>
-
-          {selectedAuthors.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-2">
-              {selectedAuthors.map((a) => (
-                <span
-                  key={a.id}
-                  className="bg-accent text-white text-xs rounded-full px-3 py-1 flex items-center gap-1"
-                >
-                  {a.name} {a.lastname}
-                  <button
-                    type="button"
-                    onClick={() => removeAuthor(a.id)}
-                    className="ml-1 hover:opacity-70"
-                  >
-                    x
-                  </button>
-                </span>
-              ))}
-            </div>
-          )}
-
-          <div className="relative">
-            <input
-              type="text"
-              value={authorSearch}
-              onChange={(e) => setAuthorSearch(e.target.value)}
-              placeholder="Buscar autor..."
-              className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm w-full"
-            />
-            {authorSearch && (
-              <ul className="absolute z-10 top-full left-0 right-0 mt-1 bg-card-bg border border-card-border rounded-lg max-h-40 overflow-y-auto">
-                {filteredAuthors.map((a) => (
-                  <li key={a.id}>
-                    <button
-                      type="button"
-                      onClick={() => addAuthor(a)}
-                      className="w-full text-left px-5 py-2 text-sm hover:bg-accent hover:text-white transition-colors"
-                    >
-                      {a.name} {a.lastname}
-                    </button>
-                  </li>
-                ))}
-                {filteredAuthors.length === 0 && (
-                  <li>
-                    <button
-                      type="button"
-                      onClick={saveFormAndRedirect}
-                      className="w-full text-left px-5 py-2 text-sm hover:bg-accent hover:text-white transition-colors"
-                    >
-                      Crear "{authorSearch}"
-                    </button>
-                  </li>
-                )}
-              </ul>
-            )}
-          </div>
-
-          {selectedAuthors.map((a) => (
-            <input key={a.id} type="hidden" name="author_ids" value={a.id} />
-          ))}
-        </div>
       </div>
-
+      
       <div className="grid grid-cols-3 gap-4">
         <div className="flex flex-col gap-1">
           <label htmlFor="status" className="text-sm text-muted">
@@ -314,7 +298,8 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-3 gap-4">
+        
         <div className="flex flex-col gap-1">
           <label htmlFor="fiction" className="text-sm text-muted">
             Ficción
@@ -329,7 +314,21 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
             <option value="false">No</option>
           </select>
         </div>
-
+        
+        <div className="flex flex-col gap-1">
+          <label htmlFor="has_stories" className="text-sm text-muted">
+            Cuentos o relatos
+          </label>
+          <select
+            id="has_stories"
+            name="has_stories"
+            defaultValue="false"
+            className="bg-card-bg border border-card-border rounded-lg px-5 pr-10 py-3 text-sm"
+          >
+            <option value="false">No</option>
+            <option value="true">Sí</option>
+          </select>
+        </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="in_library" className="text-sm text-muted">
             En biblioteca
@@ -348,21 +347,18 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
 
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-1">
-          <label htmlFor="has_stories" className="text-sm text-muted">
-            Cuentos o relatos
+          <label htmlFor="purchased_date" className="text-sm text-muted">
+            Año de compra
           </label>
-          <select
-            id="has_stories"
-            name="has_stories"
-            defaultValue="false"
-            className="bg-card-bg border border-card-border rounded-lg px-5 pr-10 py-3 text-sm"
-          >
-            <option value="false">No</option>
-            <option value="true">Sí</option>
-          </select>
+          <input
+            type="number"
+            id="purchased_date"
+            name="purchased_date"
+            className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm"
+          />
         </div>
-
         <div className="flex flex-col gap-1">
+          
           <label htmlFor="purchased_from" className="text-sm text-muted">
             Comprado en o regalado por
           </label>

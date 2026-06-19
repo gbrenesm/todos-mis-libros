@@ -25,15 +25,15 @@
     font-size: 16px;
 
     @media (min-width: 1536px) {
-      font-size: 20px;
-    }
-
-    @media (min-width: 1920px) {
       font-size: 24px;
     }
 
-    @media (min-width: 2560px) {
+    @media (min-width: 1920px) {
       font-size: 28px;
+    }
+
+    @media (min-width: 2560px) {
+      font-size: 30px;
     }
   }
 

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createQuoteAction, updateQuoteAction } from "@/app/books/[id]/actions";
 import type { Quote } from "@/types/quote";
+import { RichTextEditor } from '@/components/RichTextEditor'
 
 type Props = {
   bookId: string;
@@ -12,6 +13,7 @@ type Props = {
 export default function QuoteSection({ bookId, quotes }: Props) {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [contenido, setContenido] = useState('')
 
   return (
     <section>
@@ -29,23 +31,26 @@ export default function QuoteSection({ bookId, quotes }: Props) {
       {showForm && (
         <form
           action={async (formData) => {
+            // Inyectamos el HTML del editor en el formData
+            formData.set('quote', contenido)
             await createQuoteAction(formData);
             setShowForm(false);
+            setContenido('');
           }}
           className="flex flex-col gap-4 mb-8 p-6 bg-card-bg border border-card-border rounded-lg"
         >
           <input type="hidden" name="book_id" value={bookId} />
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="quote" className="text-sm text-muted">
+            <label className="text-sm text-muted">
               Cita *
             </label>
-            <textarea
-              id="quote"
-              name="quote"
-              required
-              rows={4}
-              className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm resize-y"
+            {/* Campo oculto que lleva el valor al servidor — lo llena el onChange de abajo */}
+            <input type="hidden" name="quote" value={contenido} />
+            <RichTextEditor
+              placeholder="..."
+              onChange={setContenido}
+              limit={10000}
             />
           </div>
 
@@ -81,7 +86,8 @@ export default function QuoteSection({ bookId, quotes }: Props) {
 
           <button
             type="submit"
-            className="mt-2 bg-accent text-white rounded-lg px-6 py-3 text-sm font-medium hover:opacity-90 transition-opacity self-start"
+            disabled={!contenido || contenido === '<p></p>'}
+            className="mt-2 bg-accent text-white rounded-lg px-6 py-3 text-sm font-medium hover:opacity-90 transition-opacity self-start disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Guardar cita
           </button>
@@ -105,7 +111,7 @@ export default function QuoteSection({ bookId, quotes }: Props) {
             <div
               key={q.id}
               className="p-5 rounded-lg text-white"
-              style={{ backgroundColor: "#68B0AB" }}
+              style={{ backgroundColor: "#654597" }}
             >
               <div className="flex justify-between items-start gap-4">
                 <p className="font-handwritten text-base leading-relaxed flex-1">
