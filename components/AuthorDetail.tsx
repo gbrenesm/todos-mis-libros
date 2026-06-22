@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { updateAuthorAction } from "@/app/authors/[id]/actions";
+import PencilIcon from "@/components/PencilIcon";
 import type { Author } from "@/types/author";
 import type { Country } from "@/types/country";
 
@@ -144,10 +145,7 @@ export default function AuthorDetail({ author, countrys }: Props) {
           onClick={() => setEditing(true)}
           className="bg-accent text-white rounded-lg px-5 py-2 text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-            <path d="m15 5 4 4" />
-          </svg>
+          <PencilIcon size={16} />
         </button>
       </div>
 

@@ -21,22 +21,22 @@ export default async function BookDetailPage({ params }: Props) {
 
   return (
     <main className="px-8 py-12 md:px-16 lg:px-24 max-w-5xl mx-auto">
-      <div className="flex flex-col md:flex-row items-center gap-10 mb-12">
-        <div className="shrink-0">
-          {book.cover ? (
-            <img
-              src={book.cover}
-              alt={book.name}
-              className="w-48 h-72 object-cover rounded-lg border border-card-border"
-            />
-          ) : (
-            <div className="w-48 h-72 bg-card-bg rounded-lg border border-card-border flex items-center justify-center">
-              <span className="text-muted text-sm">Sin portada</span>
-            </div>
-          )}
-        </div>
+      <div className="bg-card-bg border border-card-border rounded-xl p-8 mb-12">
+        <div className="flex flex-col md:flex-row items-start gap-8">
+          <div className="shrink-0">
+            {book.cover ? (
+              <img
+                src={book.cover}
+                alt={book.name}
+                className="w-40 h-60 object-cover rounded-lg"
+              />
+            ) : (
+              <div className="w-40 h-60 bg-white/50 rounded-lg flex items-center justify-center">
+                <span className="text-muted text-sm">Sin portada</span>
+              </div>
+            )}
+          </div>
 
-        <div className="flex-1 bg-amber-50 border border-amber-200 rounded-xl p-8">
           <BookDetail book={book} />
         </div>
       </div>

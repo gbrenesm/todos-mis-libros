@@ -1,10 +1,44 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { updateBookAction, deleteBookAction } from "@/app/books/[id]/actions";
-import type { Book } from "@/types/book";
+import PencilIcon from "@/components/PencilIcon";
 
-export default function BookDetail({ book }: { book: Book }) {
+type BookDetailData = {
+  id: string;
+  name: string;
+  year: number;
+  read_date: string[] | null;
+  status: string;
+  rating: string;
+  format: string;
+  reading_times: number;
+  purchased_date: number | null;
+  fiction: boolean;
+  in_library: boolean;
+  has_stories: boolean;
+  purchased_from: string | null;
+  cover: string | null;
+  editorial: string;
+  authors: string;
+  author_id: string | null;
+  tags: string | null;
+};
+
+function ratingStars(rating: string) {
+  const map: Record<string, number> = {
+    preferido: 5,
+    "muy bueno": 4,
+    bueno: 3,
+    "más o menos": 2,
+    malo: 1,
+  };
+  const stars = map[rating] ?? 0;
+  return "★".repeat(stars) + "☆".repeat(5 - stars);
+}
+
+export default function BookDetail({ book }: { book: BookDetailData }) {
   const [editing, setEditing] = useState(false);
 
   if (editing) {
@@ -25,7 +59,7 @@ export default function BookDetail({ book }: { book: Book }) {
             name="name"
             defaultValue={book.name}
             required
-            className="text-3xl font-bold bg-card-bg border border-card-border rounded-lg px-4 py-2 flex-1 mr-4"
+            className="text-2xl font-bold bg-white border border-card-border rounded-lg px-4 py-2 flex-1 mr-4"
           />
           <div className="flex gap-2">
             <button
@@ -91,6 +125,9 @@ export default function BookDetail({ book }: { book: Book }) {
             />
           </div>
           <div className="col-span-2">
+            <Field label="Tags" name="tags" type="text" defaultValue={book.tags || ""} placeholder="ficción, latinoamérica" />
+          </div>
+          <div className="col-span-2">
             <Field label="Portada (URL)" name="cover" type="url" defaultValue={book.cover || ""} />
           </div>
         </div>
@@ -117,40 +154,45 @@ export default function BookDetail({ book }: { book: Book }) {
   }
 
   return (
-    <div className="flex flex-col gap-4 flex-1">
+    <div className="flex flex-col gap-3 flex-1">
       <div className="flex items-start justify-between">
-        <h1 className="text-3xl font-handwritten">{book.name}</h1>
+        <h1 className="text-2xl font-bold text-title">{book.name}</h1>
         <button
           type="button"
           onClick={() => setEditing(true)}
-          className="bg-accent text-white rounded-lg px-5 py-2 text-sm font-medium hover:opacity-90 transition-opacity"
+          className="bg-accent text-white rounded-md p-2 hover:opacity-90 transition-opacity"
+          aria-label="Editar libro"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-            <path d="m15 5 4 4" />
-          </svg>
+          <PencilIcon />
         </button>
       </div>
-      <p className="text-muted text-lg font-handwritten">{book.authors}</p>
+
+      {book.author_id ? (
+        <Link href={`/authors/${book.author_id}`} className="text-label text-sm underline hover:opacity-80 transition-opacity">
+          {book.authors}
+        </Link>
+      ) : (
+        <p className="text-label text-sm">{book.authors}</p>
+      )}
 
       <div className="grid grid-cols-2 gap-x-10 gap-y-3 mt-4 text-sm">
-        <Detail label="Editorial" value={book.editorial} />
-        <Detail label="Primera edición" value={String(book.year)} />
-        <Detail label="Estado" value={book.status} />
-        <Detail label="Calificación" value={book.rating} />
-        <Detail label="Formato" value={book.format} />
-        <Detail label="Veces leído" value={String(book.reading_times)} />
-        <Detail label="Ficción" value={book.fiction ? "Sí" : "No"} />
-        <Detail label="En biblioteca" value={book.in_library ? "Sí" : "No"} />
-        <Detail label="Cuentos o relatos" value={book.has_stories ? "Sí" : "No"} />
+        <Detail label="EDITORIAL" value={book.editorial} />
+        <Detail label="PRIMERA EDICIÓN" value={String(book.year)} />
+        <Detail label="ESTADO" value={book.status} />
+        <Detail label="CALIFICACIÓN" value={`${ratingStars(book.rating)} ${book.rating}`} />
+        <Detail label="FORMATO" value={book.format} />
+        <Detail label="VECES LEÍDO" value={String(book.reading_times)} />
+        <Detail label="FICCIÓN" value={book.fiction ? "Sí" : "No"} />
+        <Detail label="EN BIBLIOTECA" value={book.in_library ? "Sí" : "No"} />
+        {book.has_stories && <Detail label="CUENTOS O RELATOS" value="Sí" />}
         {book.purchased_date && (
-          <Detail label="Año de compra" value={String(book.purchased_date)} />
+          <Detail label="AÑO DE COMPRA" value={String(book.purchased_date)} />
         )}
         {book.purchased_from && (
-          <Detail label="Comprado en o regalado por" value={book.purchased_from} />
+          <Detail label="COMPRADO EN" value={book.purchased_from} />
         )}
         {book.read_date && book.read_date.length > 0 && (
-          <Detail label="Fechas de lectura" value={book.read_date.join(", ")} />
+          <Detail label="FECHAS DE LECTURA" value={book.read_date.join(", ")} />
         )}
       </div>
 
@@ -159,7 +201,7 @@ export default function BookDetail({ book }: { book: Book }) {
           {book.tags.split(", ").map((tag) => (
             <span
               key={tag}
-              className="bg-accent text-white text-xs rounded-full px-3 py-1"
+              className="bg-tag text-tag-text text-xs rounded-full px-3 py-1"
             >
               {tag}
             </span>
@@ -172,9 +214,9 @@ export default function BookDetail({ book }: { book: Book }) {
 
 function Detail({ label, value }: { label: string; value: string }) {
   return (
-    <div>
-      <span className="text-muted">{label}:</span>{" "}
-      <span className="font-handwritten text-base">{value}</span>
+    <div className="flex flex-col gap-0.5">
+      <span className="text-label text-xs font-medium tracking-wide">{label}</span>
+      <span className="text-sm text-value">{value}</span>
     </div>
   );
 }
@@ -184,14 +226,14 @@ function Field({ label, name, type, defaultValue, placeholder }: {
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={name} className="text-sm text-muted">{label}</label>
+      <label htmlFor={name} className="text-xs text-label font-medium uppercase tracking-wide">{label}</label>
       <input
         type={type}
         id={name}
         name={name}
         defaultValue={defaultValue}
         placeholder={placeholder}
-        className="bg-card-bg border border-card-border rounded-lg px-4 py-2 text-sm"
+        className="bg-white border border-card-border rounded-lg px-4 py-2 text-sm"
       />
     </div>
   );
@@ -202,12 +244,12 @@ function SelectField({ label, name, defaultValue, options }: {
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={name} className="text-sm text-muted">{label}</label>
+      <label htmlFor={name} className="text-xs text-label font-medium uppercase tracking-wide">{label}</label>
       <select
         id={name}
         name={name}
         defaultValue={defaultValue}
-        className="bg-card-bg border border-card-border rounded-lg px-4 pr-10 py-2 text-sm"
+        className="bg-white border border-card-border rounded-lg px-4 pr-10 py-2 text-sm"
       >
         {options.map((o) => (
           <option key={o.value} value={o.value}>{o.label}</option>

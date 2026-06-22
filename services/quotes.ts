@@ -6,7 +6,7 @@ export async function getQuotesByBookId(bookId: string) {
     SELECT id, quote, pages, libreta, book_id
     FROM quotes
     WHERE book_id = ${bookId} AND deleted_at IS NULL
-    ORDER BY created_at DESC
+    ORDER BY created_at ASC
   `;
 }
 

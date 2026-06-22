@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createStoryAction, updateStoryAction } from "@/app/books/[id]/actions";
+import PencilIcon from "@/components/PencilIcon";
 import type { Story } from "@/types/story";
 
 type Props = {
@@ -104,14 +105,13 @@ export default function StorySection({ bookId, storys }: Props) {
           ) : (
             <div
               key={s.id}
-              className="p-5 rounded-lg text-white"
-              style={{ backgroundColor: "#8B5E83" }}
+              className="p-5 rounded-lg bg-story-bg"
             >
               <div className="flex justify-between items-start gap-4">
                 <div className="flex-1">
-                  <h3 className="font-bold text-base">{s.name}</h3>
+                  <h3 className="font-bold text-base text-story-title">{s.name}</h3>
                   {s.description && (
-                    <p className="font-handwritten text-sm mt-2 leading-relaxed opacity-90">
+                    <p className="text-sm mt-2 leading-relaxed text-story-desc">
                       {s.description}
                     </p>
                   )}
@@ -119,16 +119,13 @@ export default function StorySection({ bookId, storys }: Props) {
                 <button
                   type="button"
                   onClick={() => setEditingId(s.id)}
-                  className="shrink-0 text-white/70 hover:text-white transition-colors"
+                  className="shrink-0 text-story-desc hover:text-story-title transition-colors"
                   aria-label="Editar cuento"
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                    <path d="m15 5 4 4" />
-                  </svg>
+                  <PencilIcon />
                 </button>
               </div>
-              <div className="mt-3 text-xs text-white/70">
+              <div className="mt-3 text-xs font-medium uppercase tracking-wide text-story-desc">
                 <span>{s.rating}</span>
               </div>
             </div>

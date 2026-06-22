@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createQuoteAction, updateQuoteAction } from "@/app/books/[id]/actions";
 import type { Quote } from "@/types/quote";
 import { RichTextEditor } from '@/components/RichTextEditor'
+import PencilIcon from "@/components/PencilIcon"
 
 type Props = {
   bookId: string;
@@ -110,26 +111,23 @@ export default function QuoteSection({ bookId, quotes }: Props) {
           ) : (
             <div
               key={q.id}
-              className="p-5 rounded-lg text-white"
-              style={{ backgroundColor: "#654597" }}
+              className="p-5 rounded-lg bg-quote-bg text-quote-text"
             >
               <div className="flex justify-between items-start gap-4">
-                <p className="font-handwritten text-base leading-relaxed flex-1">
-                  "{q.quote}"
-                </p>
+                <div
+                  className="text-sm leading-relaxed flex-1 prose prose-sm max-w-none text-quote-text"
+                  dangerouslySetInnerHTML={{ __html: q.quote }}
+                />
                 <button
                   type="button"
                   onClick={() => setEditingId(q.id)}
-                  className="shrink-0 text-white/70 hover:text-white transition-colors"
+                  className="shrink-0 text-quote-meta hover:text-quote-text transition-colors"
                   aria-label="Editar cita"
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                    <path d="m15 5 4 4" />
-                  </svg>
+                  <PencilIcon />
                 </button>
               </div>
-              <div className="flex gap-4 mt-3 text-xs text-white/70">
+              <div className="flex gap-4 mt-3 text-xs text-quote-meta">
                 {q.pages && <span>Página {q.pages}</span>}
                 {q.libreta && <span>En libreta</span>}
               </div>

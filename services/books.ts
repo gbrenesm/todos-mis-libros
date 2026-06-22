@@ -61,6 +61,7 @@ type BookDetail = {
   cover: string | null;
   editorial: string;
   authors: string;
+  author_id: string | null;
   tags: string | null;
 };
 
@@ -83,6 +84,7 @@ export async function getBookById(id: string) {
       b.cover,
       e.name AS editorial,
       STRING_AGG(DISTINCT CONCAT(a.name, ' ', COALESCE(a.lastname, '')), ', ') AS authors,
+      MIN(a.id::text) AS author_id,
       STRING_AGG(DISTINCT t.name, ', ') AS tags
     FROM books b
     LEFT JOIN editorials e ON b.editorial_id = e.id
@@ -160,12 +162,18 @@ export async function getBooks() {
       e.name AS editorial,
       a.id AS author_id,
       a.name AS author_name,
-      a.lastname AS author_lastname
+      a.lastname AS author_lastname,
+      STRING_AGG(DISTINCT t.name, ', ') AS tags
     FROM books b
     LEFT JOIN editorials e ON b.editorial_id = e.id
     LEFT JOIN book_authors ba ON ba.book_id = b.id
     LEFT JOIN authors a ON ba.author_id = a.id
+    LEFT JOIN tags_books tb ON tb.book_id = b.id
+    LEFT JOIN tags t ON tb.tag_id = t.id
     WHERE b.deleted_at IS NULL
+    GROUP BY b.id, b.name, b.year, b.status, b.rating, b.format, b.reading_times,
+      b.purchased_date, b.fiction, b.in_library, b.has_stories, b.purchased_from,
+      b.cover, b.read_date, e.name, a.id, a.name, a.lastname
     ORDER BY b.name
   `;
 }

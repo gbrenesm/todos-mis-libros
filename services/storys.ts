@@ -6,7 +6,7 @@ export async function getStorysByBookId(bookId: string) {
     SELECT id, name, description, rating, book_id
     FROM storys
     WHERE book_id = ${bookId} AND deleted_at IS NULL
-    ORDER BY created_at DESC
+    ORDER BY created_at ASC
   `;
 }
 
