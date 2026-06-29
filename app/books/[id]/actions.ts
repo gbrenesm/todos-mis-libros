@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { createQuote, updateQuote } from "@/services/quotes";
 import { createStory, updateStory } from "@/services/storys";
 import { updateBook, deleteBook } from "@/services/books";
+import { updateBookTags } from "@/services/tags";
 
 export async function createQuoteAction(formData: FormData) {
   const bookId = formData.get("book_id") as string;
@@ -39,6 +40,10 @@ export async function updateBookAction(formData: FormData) {
     cover: (formData.get("cover") as string) || null,
     read_date: readDate,
   });
+
+  const tagsRaw = formData.get("tags") as string;
+  const tagNames = tagsRaw ? tagsRaw.split(", ").filter(Boolean) : [];
+  await updateBookTags(id, tagNames);
 
   revalidatePath(`/books/${id}`);
 }

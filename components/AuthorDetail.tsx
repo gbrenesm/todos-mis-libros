@@ -9,42 +9,47 @@ import type { Country } from "@/types/country";
 type Props = {
   author: Author;
   countrys: Country[];
+  countryIds: number[];
 };
 
-export default function AuthorDetail({ author, countrys }: Props) {
+export default function AuthorDetail({ author, countrys, countryIds }: Props) {
   const [editing, setEditing] = useState(false);
+  const [selectedCountries, setSelectedCountries] = useState<number[]>(countryIds);
   const fullName = `${author.name} ${author.lastname ?? ""}`.trim();
 
   if (editing) {
     return (
       <form
         action={async (formData) => {
+          for (const cid of selectedCountries) {
+            formData.append("country_ids", String(cid));
+          }
           await updateAuthorAction(formData);
           setEditing(false);
         }}
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-4 flex-1 min-w-0"
       >
         <input type="hidden" name="id" value={author.id} />
 
-        <div className="flex items-start justify-between">
-          <div className="flex gap-3 flex-1 mr-4">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="flex gap-3 flex-1 min-w-0">
             <input
               type="text"
               name="name"
               defaultValue={author.name}
               required
               placeholder="Nombre"
-              className="text-2xl font-handwritten bg-card-bg border border-card-border rounded-lg px-4 py-2 flex-1"
+              className="text-lg font-bold bg-card-bg border border-card-border rounded-lg px-4 py-2 flex-1 min-w-0"
             />
             <input
               type="text"
               name="lastname"
               defaultValue={author.lastname || ""}
               placeholder="Apellido"
-              className="text-2xl font-handwritten bg-card-bg border border-card-border rounded-lg px-4 py-2 flex-1"
+              className="text-lg font-bold bg-card-bg border border-card-border rounded-lg px-4 py-2 flex-1 min-w-0"
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 shrink-0">
             <button
               type="submit"
               className="bg-accent text-white rounded-lg px-5 py-2 text-sm font-medium hover:opacity-90 transition-opacity"
@@ -62,16 +67,41 @@ export default function AuthorDetail({ author, countrys }: Props) {
         </div>
 
         <div className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm mt-2">
-          <div className="flex flex-col gap-1">
-            <label className="text-xs text-muted">País</label>
+          <div className="col-span-2 flex flex-col gap-2">
+            <label className="text-xs text-muted">Países</label>
+            <div className="flex flex-wrap gap-2">
+              {selectedCountries.map((cid) => {
+                const country = countrys.find((c) => c.id === cid);
+                return (
+                  <span key={cid} className="bg-tag text-tag-text text-xs rounded-full px-3 py-1 flex items-center gap-1">
+                    {country?.name}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCountries(selectedCountries.filter((id) => id !== cid))}
+                      className="ml-1 hover:opacity-70"
+                    >
+                      ×
+                    </button>
+                  </span>
+                );
+              })}
+            </div>
             <select
-              name="country_id"
-              defaultValue={author.country_id}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                if (val && !selectedCountries.includes(val)) {
+                  setSelectedCountries([...selectedCountries, val]);
+                }
+                e.target.value = "";
+              }}
               className="bg-card-bg border border-card-border rounded-lg px-4 pr-10 py-2 text-sm"
             >
-              {countrys.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
+              <option value="">Agregar país...</option>
+              {countrys
+                .filter((c) => !selectedCountries.includes(c.id))
+                .map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
             </select>
           </div>
           <div className="flex flex-col gap-1">
@@ -139,11 +169,12 @@ export default function AuthorDetail({ author, countrys }: Props) {
   return (
     <div className="flex flex-col gap-3 flex-1">
       <div className="flex items-start justify-between">
-        <h1 className="text-3xl font-handwritten">{fullName}</h1>
+        <h1 className="text-3xl font-bold text-title">{fullName}</h1>
         <button
           type="button"
           onClick={() => setEditing(true)}
-          className="bg-accent text-white rounded-lg px-5 py-2 text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
+          className="bg-accent text-white rounded-md p-2 hover:opacity-90 transition-opacity"
+          aria-label="Editar autor"
         >
           <PencilIcon size={16} />
         </button>
@@ -151,35 +182,35 @@ export default function AuthorDetail({ author, countrys }: Props) {
 
       <div className="grid grid-cols-2 gap-x-10 gap-y-2 text-sm mt-2">
         <div>
-          <span className="text-muted">País:</span>{" "}
-          <span className="font-handwritten text-base">{author.country}</span>
+          <span className="text-label text-xs font-medium tracking-wide uppercase">PAÍS</span>
+          <p className="text-value text-sm">{author.countries}</p>
         </div>
         {author.city && (
           <div>
-            <span className="text-muted">Ciudad:</span>{" "}
-            <span className="font-handwritten text-base">{author.city}</span>
+            <span className="text-label text-xs font-medium tracking-wide uppercase">CIUDAD</span>
+            <p className="text-value text-sm">{author.city}</p>
           </div>
         )}
         {author.birthday && (
           <div>
-            <span className="text-muted">Nacimiento:</span>{" "}
-            <span className="font-handwritten text-base">{author.birthday}</span>
+            <span className="text-label text-xs font-medium tracking-wide uppercase">NACIMIENTO</span>
+            <p className="text-value text-sm">{author.birthday}</p>
           </div>
         )}
         {author.death && (
           <div>
-            <span className="text-muted">Muerte:</span>{" "}
-            <span className="font-handwritten text-base">{author.death}</span>
+            <span className="text-label text-xs font-medium tracking-wide uppercase">MUERTE</span>
+            <p className="text-value text-sm">{author.death}</p>
           </div>
         )}
         <div>
-          <span className="text-muted">Género:</span>{" "}
-          <span className="font-handwritten text-base">{author.gender}</span>
+          <span className="text-label text-xs font-medium tracking-wide uppercase">GÉNERO</span>
+          <p className="text-value text-sm">{author.gender}</p>
         </div>
         {author.nobel_prize && (
           <div>
-            <span className="text-muted">Nobel:</span>{" "}
-            <span className="font-handwritten text-base">{author.nobel_prize}</span>
+            <span className="text-label text-xs font-medium tracking-wide uppercase">NOBEL</span>
+            <p className="text-value text-sm">{author.nobel_prize}</p>
           </div>
         )}
       </div>

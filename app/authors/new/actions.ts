@@ -4,6 +4,11 @@ import { redirect } from "next/navigation";
 import { createAuthor } from "@/services/authors";
 
 export async function createAuthorAction(formData: FormData) {
+  const countryIdsRaw = formData.getAll("country_ids") as string[];
+  const countryIds = countryIdsRaw.length > 0
+    ? countryIdsRaw.map(Number).filter((n) => !isNaN(n) && n > 0)
+    : [Number(formData.get("country_id"))].filter((n) => !isNaN(n) && n > 0);
+
   await createAuthor({
     name: formData.get("name") as string,
     lastname: (formData.get("lastname") as string) || null,
@@ -13,7 +18,7 @@ export async function createAuthorAction(formData: FormData) {
     nobel_prize: formData.get("nobel_prize") ? Number(formData.get("nobel_prize")) : null,
     photo: (formData.get("photo") as string) || null,
     city: (formData.get("city") as string) || null,
-    country_id: Number(formData.get("country_id")),
+    country_ids: countryIds,
   });
 
   const returnTo = formData.get("returnTo") as string | null;

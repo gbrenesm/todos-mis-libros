@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getBookById } from "@/services/books";
 import { getQuotesByBookId } from "@/services/quotes";
 import { getStorysByBookId } from "@/services/storys";
+import { getTags } from "@/services/tags";
 import BookDetail from "@/components/BookDetail";
 import QuoteSection from "@/components/QuoteSection";
 import StorySection from "@/components/StorySection";
@@ -16,8 +17,11 @@ export default async function BookDetailPage({ params }: Props) {
 
   if (!book) notFound();
 
-  const quotes = await getQuotesByBookId(id);
-  const storys = book.has_stories ? await getStorysByBookId(id) : [];
+  const [quotes, storys, allTags] = await Promise.all([
+    getQuotesByBookId(id),
+    book.has_stories ? getStorysByBookId(id) : Promise.resolve([]),
+    getTags(),
+  ]);
 
   return (
     <main className="px-8 py-12 md:px-16 lg:px-24 max-w-5xl mx-auto">
@@ -37,7 +41,7 @@ export default async function BookDetailPage({ params }: Props) {
             )}
           </div>
 
-          <BookDetail book={book} />
+          <BookDetail book={book} allTags={allTags} />
         </div>
       </div>
 

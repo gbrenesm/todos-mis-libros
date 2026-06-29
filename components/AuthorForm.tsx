@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { createAuthorAction } from "@/app/authors/new/actions";
 import type { Country } from "@/types/country";
 
@@ -9,8 +10,18 @@ type AuthorFormProps = {
 };
 
 export default function AuthorForm({ countrys, returnTo }: AuthorFormProps) {
+  const [selectedCountries, setSelectedCountries] = useState<number[]>([]);
+
   return (
-    <form action={createAuthorAction} className="flex flex-col gap-5">
+    <form
+      action={async (formData) => {
+        for (const cid of selectedCountries) {
+          formData.append("country_ids", String(cid));
+        }
+        await createAuthorAction(formData);
+      }}
+      className="flex flex-col gap-5"
+    >
       {returnTo && <input type="hidden" name="returnTo" value={returnTo} />}
       <div className="flex flex-col gap-1">
         <label htmlFor="name" className="text-sm text-muted">
@@ -64,22 +75,43 @@ export default function AuthorForm({ countrys, returnTo }: AuthorFormProps) {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1">
-          <label htmlFor="country_id" className="text-sm text-muted">
-            País *
-          </label>
+        <div className="flex flex-col gap-2">
+          <label className="text-sm text-muted">Países *</label>
+          <div className="flex flex-wrap gap-2">
+            {selectedCountries.map((cid) => {
+              const country = countrys.find((c) => c.id === cid);
+              return (
+                <span key={cid} className="bg-tag text-tag-text text-xs rounded-full px-3 py-1 flex items-center gap-1">
+                  {country?.name}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCountries(selectedCountries.filter((id) => id !== cid))}
+                    className="ml-1 hover:opacity-70"
+                  >
+                    ×
+                  </button>
+                </span>
+              );
+            })}
+          </div>
           <select
-            id="country_id"
-            name="country_id"
-            required
+            onChange={(e) => {
+              const val = Number(e.target.value);
+              if (val && !selectedCountries.includes(val)) {
+                setSelectedCountries([...selectedCountries, val]);
+              }
+              e.target.value = "";
+            }}
             className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm"
           >
-            <option value="">Seleccionar</option>
-            {countrys.map((country) => (
-              <option key={country.id} value={country.id}>
-                {country.name}
-              </option>
-            ))}
+            <option value="">Agregar país...</option>
+            {countrys
+              .filter((c) => !selectedCountries.includes(c.id))
+              .map((country) => (
+                <option key={country.id} value={country.id}>
+                  {country.name}
+                </option>
+              ))}
           </select>
         </div>
 
@@ -140,7 +172,8 @@ export default function AuthorForm({ countrys, returnTo }: AuthorFormProps) {
 
       <button
         type="submit"
-        className="mt-4 bg-accent text-white rounded-lg px-6 py-3 text-sm font-medium hover:opacity-90 transition-opacity"
+        disabled={selectedCountries.length === 0}
+        className="mt-4 bg-accent text-white rounded-lg px-6 py-3 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
       >
         Guardar autor
       </button>

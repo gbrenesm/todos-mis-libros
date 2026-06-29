@@ -17,9 +17,9 @@ export default function BookCard({ book }: BookCardProps) {
   const stars = ratingStars[book.rating] ?? 3;
 
   return (
-    <div className="bg-card-bg border border-card-border rounded-xl overflow-hidden flex flex-col">
+    <div className="bg-card-bg border border-card-border rounded-xl overflow-hidden flex flex-col max-w-48">
       <Link href={`/books/${book.id}`}>
-        <div className="aspect-3/4">
+        <div className="aspect-2/3">
           {book.cover ? (
             <img
               src={book.cover}

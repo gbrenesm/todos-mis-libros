@@ -38,14 +38,20 @@ function ratingStars(rating: string) {
   return "★".repeat(stars) + "☆".repeat(5 - stars);
 }
 
-export default function BookDetail({ book }: { book: BookDetailData }) {
+type TagOption = { id: string; name: string };
+
+export default function BookDetail({ book, allTags }: { book: BookDetailData; allTags: TagOption[] }) {
   const [editing, setEditing] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<string[]>(
+    book.tags ? book.tags.split(", ") : []
+  );
 
   if (editing) {
     return (
       <div className="flex flex-col gap-4 flex-1">
       <form
         action={async (formData) => {
+          formData.set("tags", selectedTags.join(", "));
           await updateBookAction(formData);
           setEditing(false);
         }}
@@ -124,8 +130,39 @@ export default function BookDetail({ book }: { book: BookDetailData }) {
               placeholder="2023-06, 2025-01"
             />
           </div>
-          <div className="col-span-2">
-            <Field label="Tags" name="tags" type="text" defaultValue={book.tags || ""} placeholder="ficción, latinoamérica" />
+          <div className="col-span-2 flex flex-col gap-2">
+            <label className="text-xs text-label font-medium uppercase tracking-wide">Etiquetas</label>
+            <div className="flex flex-wrap gap-2">
+              {selectedTags.map((tag) => (
+                <span key={tag} className="bg-tag text-tag-text text-xs rounded-full px-3 py-1 flex items-center gap-1">
+                  {tag}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedTags(selectedTags.filter((t) => t !== tag))}
+                    className="ml-1 hover:opacity-70"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+            <select
+              onChange={(e) => {
+                const val = e.target.value;
+                if (val && !selectedTags.includes(val)) {
+                  setSelectedTags([...selectedTags, val]);
+                }
+                e.target.value = "";
+              }}
+              className="bg-white border border-card-border rounded-lg px-4 py-2 text-sm"
+            >
+              <option value="">Agregar etiqueta...</option>
+              {allTags
+                .filter((t) => !selectedTags.includes(t.name))
+                .map((t) => (
+                  <option key={t.id} value={t.name}>{t.name}</option>
+                ))}
+            </select>
           </div>
           <div className="col-span-2">
             <Field label="Portada (URL)" name="cover" type="url" defaultValue={book.cover || ""} />

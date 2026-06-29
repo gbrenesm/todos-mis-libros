@@ -22,3 +22,12 @@ export async function findOrCreateTag(name: string): Promise<string> {
   `;
   return newTag.id;
 }
+
+export async function updateBookTags(bookId: string, tagNames: string[]) {
+  await sql`DELETE FROM tags_books WHERE book_id = ${bookId}`;
+
+  for (const name of tagNames) {
+    const tagId = await findOrCreateTag(name.trim());
+    await sql`INSERT INTO tags_books (book_id, tag_id) VALUES (${bookId}, ${tagId})`;
+  }
+}

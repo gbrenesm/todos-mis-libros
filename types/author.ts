@@ -8,6 +8,5 @@ export type Author = {
   nobel_prize: number | null;
   photo: string | null;
   city: string | null;
-  country_id: number;
-  country: string;
+  countries: string;
 };

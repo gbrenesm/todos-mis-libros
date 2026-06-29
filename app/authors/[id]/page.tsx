@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getAuthorById } from "@/services/authors";
+import { getAuthorById, getAuthorCountryIds } from "@/services/authors";
 import { getBooksByAuthorId } from "@/services/books";
 import { getCountrys } from "@/services/countrys";
 import AuthorDetail from "@/components/AuthorDetail";
@@ -18,7 +18,10 @@ export default async function AuthorDetailPage({ params }: Props) {
 
   if (!author) notFound();
 
-  const books = await getBooksByAuthorId(id);
+  const [books, countryIds] = await Promise.all([
+    getBooksByAuthorId(id),
+    getAuthorCountryIds(id),
+  ]);
 
   const fullName = `${author.name} ${author.lastname ?? ""}`.trim();
 
@@ -39,7 +42,7 @@ export default async function AuthorDetailPage({ params }: Props) {
           )}
         </div>
 
-        <AuthorDetail author={author} countrys={countrys} />
+        <AuthorDetail author={author} countrys={countrys} countryIds={countryIds} />
       </div>
 
       <section>

@@ -27,7 +27,8 @@ export async function getBooksByCountry() {
     FROM books b
     JOIN book_authors ba ON ba.book_id = b.id
     JOIN authors a ON ba.author_id = a.id
-    JOIN countrys c ON a.country_id = c.id
+    JOIN author_countries ac ON ac.author_id = a.id
+    JOIN countrys c ON ac.country_id = c.id
     GROUP BY c.name
     ORDER BY count DESC
     LIMIT 15
