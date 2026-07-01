@@ -46,6 +46,16 @@ export async function getBooksByTag() {
   `;
 }
 
+export async function getBooksByType() {
+  return await sql<CountRow[]>`
+    SELECT book_type AS label, COUNT(*)::int AS count
+    FROM books
+    WHERE deleted_at IS NULL
+    GROUP BY book_type
+    ORDER BY count DESC
+  `;
+}
+
 export async function getBooksByAuthorGender() {
   return await sql<CountRow[]>`
     SELECT a.gender AS label, COUNT(DISTINCT b.id)::int AS count

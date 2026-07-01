@@ -17,7 +17,7 @@ type BookDetailData = {
   purchased_date: number | null;
   fiction: boolean;
   in_library: boolean;
-  has_stories: boolean;
+  book_type: string;
   purchased_from: string | null;
   cover: string | null;
   editorial: string;
@@ -116,9 +116,10 @@ export default function BookDetail({ book, allTags }: { book: BookDetailData; al
             { value: "true", label: "Sí" },
             { value: "false", label: "No" },
           ]} />
-          <SelectField label="Cuentos o relatos" name="has_stories" defaultValue={String(book.has_stories)} options={[
-            { value: "true", label: "Sí" },
-            { value: "false", label: "No" },
+          <SelectField label="Tipo de libro" name="book_type" defaultValue={book.book_type} options={[
+            { value: "novela", label: "Novela" },
+            { value: "cuentos", label: "Cuentos" },
+            { value: "ensayo", label: "Ensayo" },
           ]} />
           <Field label="Comprado en o regalado por" name="purchased_from" type="text" defaultValue={book.purchased_from || ""} />
           <div className="col-span-2">
@@ -219,9 +220,9 @@ export default function BookDetail({ book, allTags }: { book: BookDetailData; al
         <Detail label="CALIFICACIÓN" value={`${ratingStars(book.rating)} ${book.rating}`} />
         <Detail label="FORMATO" value={book.format} />
         <Detail label="VECES LEÍDO" value={String(book.reading_times)} />
-        <Detail label="FICCIÓN" value={book.fiction ? "Sí" : "No"} />
-        <Detail label="EN BIBLIOTECA" value={book.in_library ? "Sí" : "No"} />
-        {book.has_stories && <Detail label="CUENTOS O RELATOS" value="Sí" />}
+        <Detail label="FICCIÓN" value={book.fiction ? "sí" : "no"} />
+        <Detail label="EN BIBLIOTECA" value={book.in_library ? "sí" : "no"} />
+        <Detail label="TIPO" value={book.book_type} />
         {book.purchased_date && (
           <Detail label="AÑO DE COMPRA" value={String(book.purchased_date)} />
         )}

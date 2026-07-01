@@ -40,23 +40,21 @@ export default function BookCard({ book }: BookCardProps) {
         </div>
       </Link>
 
-      <div className="p-3 flex flex-col gap-1.5 flex-1">
+      <div className="p-1.5 lg:p-3 flex flex-col gap-0.5 lg:gap-1.5 flex-1">
         <Link href={`/books/${book.id}`}>
-          <h3 className="text-sm font-semibold leading-tight line-clamp-2 text-title hover:underline">
+          <h3 className="text-[10px] lg:text-xs font-semibold leading-tight line-clamp-2 text-title hover:underline">
             {book.name}
           </h3>
         </Link>
-        <p className="text-xs text-muted">
-          <Link href={`/authors/${book.author_id}`} className="hover:underline">
-            {book.author_name} {book.author_lastname}
-          </Link>
+        <p className="text-[9px] lg:text-[11px] text-muted line-clamp-1">
+          {book.authors}
         </p>
 
-        <div className="flex items-center justify-between mt-auto pt-1">
-          <span className="text-[10px] font-medium bg-tag text-tag-text rounded-full px-2.5 py-0.5">
+        <div className="flex items-center justify-between mt-auto pt-0.5">
+          <span className="text-[7px] lg:text-[9px] font-medium bg-tag text-tag-text rounded-full px-1.5 lg:px-2 py-0.5">
             {book.fiction ? "Ficción" : "No ficción"}
           </span>
-          <span className="text-xs text-tag">
+          <span className="text-[9px] lg:text-[11px] text-tag">
             {"★".repeat(stars)}
             {"☆".repeat(5 - stars)}
           </span>

@@ -10,12 +10,10 @@ export type Book = {
   purchased_date: number | null;
   fiction: boolean;
   in_library: boolean;
-  has_stories: boolean;
+  book_type: "cuentos" | "novela" | "ensayo";
   purchased_from: string | null;
   cover: string | null;
   editorial: string;
-  author_id: string;
-  author_name: string;
-  author_lastname: string | null;
+  authors: string;
   tags: string | null;
 };

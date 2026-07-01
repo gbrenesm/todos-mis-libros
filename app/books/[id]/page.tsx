@@ -19,7 +19,7 @@ export default async function BookDetailPage({ params }: Props) {
 
   const [quotes, storys, allTags] = await Promise.all([
     getQuotesByBookId(id),
-    book.has_stories ? getStorysByBookId(id) : Promise.resolve([]),
+    book.book_type === "cuentos" ? getStorysByBookId(id) : Promise.resolve([]),
     getTags(),
   ]);
 
@@ -47,7 +47,7 @@ export default async function BookDetailPage({ params }: Props) {
 
       <QuoteSection bookId={id} quotes={quotes} />
 
-      {book.has_stories && (
+      {book.book_type === "cuentos" && (
         <div className="mt-12">
           <StorySection bookId={id} storys={storys} />
         </div>

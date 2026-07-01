@@ -18,22 +18,7 @@ export default async function Home() {
         </a>
       </header>
 
-      <section className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-card-bg border border-card-border rounded-xl p-5">
-          <p className="text-xs font-medium uppercase tracking-wide text-label">Este año</p>
-          <p className="text-3xl font-bold text-title mt-2">{thisYear}</p>
-        </div>
-        <div className="bg-card-bg border border-card-border rounded-xl p-5">
-          <p className="text-xs font-medium uppercase tracking-wide text-label">Favoritos</p>
-          <p className="text-3xl font-bold text-title mt-2">{favorites}</p>
-        </div>
-        <div className="bg-card-bg border border-card-border rounded-xl p-5">
-          <p className="text-xs font-medium uppercase tracking-wide text-label">Total</p>
-          <p className="text-3xl font-bold text-title mt-2">{books.length}</p>
-        </div>
-      </section>
-
-      <BooksGrid books={books} />
+      <BooksGrid books={books} thisYear={thisYear} favorites={favorites} />
     </main>
   );
 }

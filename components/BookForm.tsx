@@ -303,17 +303,18 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
         </div>
         
         <div className="flex flex-col gap-1">
-          <label htmlFor="has_stories" className="text-sm text-muted">
-            Cuentos o relatos
+          <label htmlFor="book_type" className="text-sm text-muted">
+            Tipo de libro
           </label>
           <select
-            id="has_stories"
-            name="has_stories"
-            defaultValue="false"
+            id="book_type"
+            name="book_type"
+            defaultValue="ensayo"
             className="bg-card-bg border border-card-border rounded-lg px-5 pr-10 py-3 text-sm"
           >
-            <option value="false">No</option>
-            <option value="true">Sí</option>
+            <option value="novela">Novela</option>
+            <option value="cuentos">Cuentos</option>
+            <option value="ensayo">Ensayo</option>
           </select>
         </div>
         <div className="flex flex-col gap-1">

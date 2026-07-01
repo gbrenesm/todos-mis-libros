@@ -6,6 +6,8 @@ import BookCard from "@/components/BookCard";
 
 type Props = {
   books: Book[];
+  thisYear: number;
+  favorites: number;
 };
 
 type SortOption = "name-asc" | "name-desc" | "read-desc" | "read-asc" | "rating";
@@ -26,9 +28,10 @@ const ratingOrder: Record<string, number> = {
   malo: 1,
 };
 
-export default function BooksGrid({ books }: Props) {
+export default function BooksGrid({ books, thisYear, favorites }: Props) {
   const [search, setSearch] = useState("");
   const [fictionFilter, setFictionFilter] = useState("");
+  const [bookTypeFilter, setBookTypeFilter] = useState("");
   const [ratingFilter, setRatingFilter] = useState("");
   const [yearFilter, setYearFilter] = useState("");
   const [editionFilter, setEditionFilter] = useState("");
@@ -51,6 +54,7 @@ export default function BooksGrid({ books }: Props) {
     let result = books.filter((b) => {
       if (fictionFilter === "ficcion" && !b.fiction) return false;
       if (fictionFilter === "no-ficcion" && b.fiction) return false;
+      if (bookTypeFilter && b.book_type !== bookTypeFilter) return false;
       if (ratingFilter && b.rating !== ratingFilter) return false;
       if (yearFilter && !b.read_date?.some((d) => d.startsWith(yearFilter))) return false;
       if (editionFilter && String(b.year) !== editionFilter) return false;
@@ -58,7 +62,7 @@ export default function BooksGrid({ books }: Props) {
       const term = search.toLowerCase();
       return (
         b.name.toLowerCase().includes(term) ||
-        `${b.author_name} ${b.author_lastname ?? ""}`.toLowerCase().includes(term)
+        (b.authors ?? "").toLowerCase().includes(term)
       );
     });
 
@@ -82,12 +86,13 @@ export default function BooksGrid({ books }: Props) {
     });
 
     return result;
-  }, [books, fictionFilter, ratingFilter, yearFilter, editionFilter, tagFilter, search, sortBy]);
+  }, [books, fictionFilter, bookTypeFilter, ratingFilter, yearFilter, editionFilter, tagFilter, search, sortBy]);
 
-  const hasActiveFilters = fictionFilter || ratingFilter || yearFilter || editionFilter || tagFilter || sortBy !== "name-asc";
+  const hasActiveFilters = fictionFilter || bookTypeFilter || ratingFilter || yearFilter || editionFilter || tagFilter || sortBy !== "name-asc";
 
   function clearAll() {
     setFictionFilter("");
+    setBookTypeFilter("");
     setRatingFilter("");
     setYearFilter("");
     setEditionFilter("");
@@ -97,14 +102,34 @@ export default function BooksGrid({ books }: Props) {
 
   const activeFilters: { label: string; clear: () => void }[] = [];
   if (fictionFilter) activeFilters.push({ label: fictionFilter === "ficcion" ? "Ficción" : "No ficción", clear: () => setFictionFilter("") });
+  if (bookTypeFilter) activeFilters.push({ label: bookTypeFilter, clear: () => setBookTypeFilter("") });
   if (yearFilter) activeFilters.push({ label: yearFilter, clear: () => setYearFilter("") });
   if (editionFilter) activeFilters.push({ label: `Ed. ${editionFilter}`, clear: () => setEditionFilter("") });
   if (ratingFilter) activeFilters.push({ label: ratingFilter, clear: () => setRatingFilter("") });
   if (tagFilter) activeFilters.push({ label: tagFilter, clear: () => setTagFilter("") });
   if (sortBy !== "name-asc") activeFilters.push({ label: sortLabels[sortBy], clear: () => setSortBy("name-asc") });
 
+  const hasFilters = fictionFilter || bookTypeFilter || ratingFilter || yearFilter || editionFilter || tagFilter || search;
+
   return (
     <>
+      <section className="grid grid-cols-3 gap-4 mb-8">
+        <div className="bg-card-bg border border-card-border rounded-xl p-5">
+          <p className="text-xs font-medium uppercase tracking-wide text-label">Este año</p>
+          <p className="text-3xl font-bold text-title mt-2">{thisYear}</p>
+        </div>
+        <div className="bg-card-bg border border-card-border rounded-xl p-5">
+          <p className="text-xs font-medium uppercase tracking-wide text-label">Favoritos</p>
+          <p className="text-3xl font-bold text-title mt-2">{favorites}</p>
+        </div>
+        <div className="bg-card-bg border border-card-border rounded-xl p-5">
+          <p className="text-xs font-medium uppercase tracking-wide text-label">Total</p>
+          <p className="text-3xl font-bold text-title mt-2">
+            {hasFilters ? `${filtered.length} / ${books.length}` : books.length}
+          </p>
+        </div>
+      </section>
+
       <div className="relative mb-6">
         <svg className="absolute left-4 top-1/2 -translate-y-1/2 text-muted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="11" cy="11" r="8" />
@@ -122,7 +147,7 @@ export default function BooksGrid({ books }: Props) {
       <div className="bg-card-bg border border-card-border rounded-xl p-6 mb-8">
         <div className="flex flex-wrap gap-6">
           <div className="flex flex-col gap-2">
-            <span className="text-xs font-medium uppercase tracking-wide text-label">Tipo</span>
+            <span className="text-xs font-medium uppercase tracking-wide text-label">Categoría</span>
             <div className="flex">
               <button
                 type="button"
@@ -139,6 +164,20 @@ export default function BooksGrid({ books }: Props) {
                 No ficc.
               </button>
             </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <span className="text-xs font-medium uppercase tracking-wide text-label">Tipo</span>
+            <select
+              value={bookTypeFilter}
+              onChange={(e) => setBookTypeFilter(e.target.value)}
+              className="bg-white border border-card-border rounded-lg px-3 pr-8 py-1.5 text-xs text-value"
+            >
+              <option value="">Todos</option>
+              <option value="novela">Novela</option>
+              <option value="cuentos">Cuentos</option>
+              <option value="ensayo">Ensayo</option>
+            </select>
           </div>
 
           <div className="flex flex-col gap-2">

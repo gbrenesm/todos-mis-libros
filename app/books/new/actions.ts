@@ -28,7 +28,7 @@ export async function createBookAction(formData: FormData) {
     purchased_date: formData.get("purchased_date") ? Number(formData.get("purchased_date")) : null,
     fiction: formData.get("fiction") === "true",
     in_library: formData.get("in_library") !== "false",
-    has_stories: formData.get("has_stories") === "true",
+    book_type: (formData.get("book_type") as string) || "ensayo",
     purchased_from: (formData.get("purchased_from") as string) || null,
     cover: (formData.get("cover") as string) || null,
     editorial_id: formData.get("editorial_id") as string,
