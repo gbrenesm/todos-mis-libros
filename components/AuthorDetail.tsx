@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { updateAuthorAction } from "@/app/authors/[id]/actions";
+import { updateAuthorAction, deleteAuthorAction } from "@/app/authors/[id]/actions";
 import PencilIcon from "@/components/PencilIcon";
 import type { Author } from "@/types/author";
 import type { Country } from "@/types/country";
@@ -14,11 +14,13 @@ type Props = {
 
 export default function AuthorDetail({ author, countrys, countryIds }: Props) {
   const [editing, setEditing] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedCountries, setSelectedCountries] = useState<number[]>(countryIds);
   const fullName = `${author.name} ${author.lastname ?? ""}`.trim();
 
   if (editing) {
     return (
+      <>
       <form
         action={async (formData) => {
           for (const cid of selectedCountries) {
@@ -162,7 +164,48 @@ export default function AuthorDetail({ author, countrys, countryIds }: Props) {
             />
           </div>
         </div>
+
+        <div className="flex justify-end mt-6">
+          <button
+            type="button"
+            onClick={() => setShowDeleteModal(true)}
+            className="text-sm text-red-600 font-medium hover:text-red-700 transition-colors"
+          >
+            Eliminar autor
+          </button>
+        </div>
+
       </form>
+
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-lg">
+            <h3 className="text-lg font-bold text-title mb-2">Eliminar autor</h3>
+            <p className="text-sm text-muted mb-6">
+              ¿Estás seguro de que deseas eliminar a <strong>{fullName}</strong>? Esta acción no se puede deshacer.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setShowDeleteModal(false)}
+                className="border border-card-border rounded-lg px-5 py-2 text-sm font-medium hover:opacity-70 transition-opacity"
+              >
+                Cancelar
+              </button>
+              <form action={deleteAuthorAction}>
+                <input type="hidden" name="id" value={author.id} />
+                <button
+                  type="submit"
+                  className="bg-red-600 text-white rounded-lg px-5 py-2 text-sm font-medium hover:bg-red-700 transition-colors"
+                >
+                  Eliminar
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
     );
   }
 

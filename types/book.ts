@@ -15,5 +15,6 @@ export type Book = {
   cover: string | null;
   editorial: string;
   authors: string;
+  author_id: string | null;
   tags: string | null;
 };

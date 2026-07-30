@@ -140,3 +140,9 @@ export async function updateAuthor(author: UpdateAuthorInput) {
     `;
   }
 }
+
+export async function deleteAuthor(id: string) {
+  await sql`
+    UPDATE authors SET deleted_at = NOW() WHERE id = ${id}
+  `;
+}

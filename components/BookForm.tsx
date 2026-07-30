@@ -211,7 +211,7 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
           <select
             id="status"
             name="status"
-            defaultValue="por leer"
+            defaultValue="leído"
             className="bg-card-bg border border-card-border rounded-lg px-5 pr-10 py-3 text-sm"
           >
             <option value="por leer">Por leer</option>
@@ -264,7 +264,7 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
             type="number"
             id="reading_times"
             name="reading_times"
-            defaultValue={0}
+            defaultValue={1}
             min={0}
             className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm"
           />
@@ -309,7 +309,7 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
           <select
             id="book_type"
             name="book_type"
-            defaultValue="ensayo"
+            defaultValue="novela"
             className="bg-card-bg border border-card-border rounded-lg px-5 pr-10 py-3 text-sm"
           >
             <option value="novela">Novela</option>
@@ -382,7 +382,25 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
           </div>
         )}
 
-        <div className="relative">
+        <select
+          onChange={(e) => {
+            const val = e.target.value;
+            if (!val) return;
+            const tag = tags.find((t) => t.id === val);
+            if (tag) addTag(tag);
+            e.target.value = "";
+          }}
+          className="bg-card-bg border border-card-border rounded-lg px-5 pr-10 py-3 text-sm"
+        >
+          <option value="">Agregar tag...</option>
+          {tags
+            .filter((t) => !selectedTags.some((s) => s.id === t.id))
+            .map((t) => (
+              <option key={t.id} value={t.id}>{t.name}</option>
+            ))}
+        </select>
+
+        <div className="flex gap-2">
           <input
             type="text"
             value={tagSearch}
@@ -393,34 +411,17 @@ export default function BookForm({ editorials, authors, tags }: BookFormProps) {
                 addNewTag();
               }
             }}
-            placeholder="Buscar o crear tag..."
-            className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm w-full"
+            placeholder="Crear nueva tag..."
+            className="bg-card-bg border border-card-border rounded-lg px-5 py-3 text-sm flex-1"
           />
           {tagSearch && (
-            <ul className="absolute z-10 top-full left-0 right-0 mt-1 bg-card-bg border border-card-border rounded-lg max-h-40 overflow-y-auto">
-              {filteredTags.map((t) => (
-                <li key={t.id}>
-                  <button
-                    type="button"
-                    onClick={() => addTag(t)}
-                    className="w-full text-left px-5 py-2 text-sm hover:bg-accent hover:text-white transition-colors"
-                  >
-                    {t.name}
-                  </button>
-                </li>
-              ))}
-              {filteredTags.length === 0 && (
-                <li>
-                  <button
-                    type="button"
-                    onClick={addNewTag}
-                    className="w-full text-left px-5 py-2 text-sm hover:bg-accent hover:text-white transition-colors"
-                  >
-                    Crear "{tagSearch}"
-                  </button>
-                </li>
-              )}
-            </ul>
+            <button
+              type="button"
+              onClick={addNewTag}
+              className="bg-accent text-white rounded-lg px-4 py-3 text-sm font-medium hover:opacity-90 transition-opacity"
+            >
+              Crear
+            </button>
           )}
         </div>
 

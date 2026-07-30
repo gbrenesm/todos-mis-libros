@@ -16,6 +16,23 @@ const TYPE_COLORS: Record<string, string> = {
   ensayo: "#104F55",
 };
 
+const FORMAT_COLORS: Record<string, string> = {
+  "físico": "#C8755A",
+  digital: "#104F55",
+  audiolibro: "#6B4E71",
+};
+
+const FICTION_COLORS: Record<string, string> = {
+  "Ficción": "#C8755A",
+  "No ficción": "#104F55",
+};
+
+const GENDER_COLORS: Record<string, string> = {
+  mujer: "#6B4E71",
+  hombre: "#C4965A",
+  "no definido": "#8B5E3C",
+};
+
 const TAG_COLORS = [
   "#C8755A", "#6B4E71", "#104F55", "#C4965A", "#8B5E3C",
   "#388697", "#1A936F", "#654597", "#E2711D", "#68B0AB",
@@ -35,13 +52,17 @@ export function BarChartSection({ title, data }: { title: string; data: CountRow
           return (
             <div
               key={d.label}
-              className="flex-1 max-w-8 mx-auto rounded-t-sm"
+              className="flex-1 max-w-8 mx-auto rounded-t-sm relative group"
               style={{
                 height: `${height}%`,
                 minHeight: d.count > 0 ? "4px" : "0",
                 backgroundColor: isCurrent ? "#104F55" : "#C8755A",
               }}
-            />
+            >
+              <span className="absolute -top-6 left-1/2 -translate-x-1/2 bg-title text-white text-[10px] rounded px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                {d.count}
+              </span>
+            </div>
           );
         })}
       </div>
@@ -95,7 +116,7 @@ export function StackedBarChartSection({ title, data, colors }: { title: string;
   );
 }
 
-export { RATING_COLORS, TYPE_COLORS };
+export { RATING_COLORS, TYPE_COLORS, FORMAT_COLORS, FICTION_COLORS, GENDER_COLORS };
 
 export function HorizontalBarChartSection({
   title,

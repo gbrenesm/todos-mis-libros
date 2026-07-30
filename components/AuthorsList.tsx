@@ -10,7 +10,7 @@ type AuthorsListProps = {
   countrys: Country[];
 };
 
-type SortOption = "name-asc" | "name-desc" | "birthday-asc" | "birthday-desc";
+type SortOption = "name-asc" | "name-desc" | "birthday-asc" | "birthday-desc" | "country";
 
 export default function AuthorsList({ authors, countrys }: AuthorsListProps) {
   const [search, setSearch] = useState("");
@@ -38,6 +38,7 @@ export default function AuthorsList({ authors, countrys }: AuthorsListProps) {
         case "name-desc": return `${b.name} ${b.lastname ?? ""}`.localeCompare(`${a.name} ${a.lastname ?? ""}`);
         case "birthday-asc": return (a.birthday ?? 9999) - (b.birthday ?? 9999);
         case "birthday-desc": return (b.birthday ?? 0) - (a.birthday ?? 0);
+        case "country": return (a.countries ?? "").localeCompare(b.countries ?? "");
         default: return 0;
       }
     });
@@ -110,6 +111,7 @@ export default function AuthorsList({ authors, countrys }: AuthorsListProps) {
               <option value="name-desc">Nombre Z → A</option>
               <option value="birthday-asc">Nacimiento ↑</option>
               <option value="birthday-desc">Nacimiento ↓</option>
+              <option value="country">País</option>
             </select>
           </div>
         </div>
@@ -120,38 +122,37 @@ export default function AuthorsList({ authors, countrys }: AuthorsListProps) {
           <Link
             key={author.id}
             href={`/authors/${author.id}`}
-            className="bg-card-bg border border-card-border rounded-xl p-4 flex flex-col gap-2 hover:border-accent/40 transition-colors"
+            className="bg-card-bg border border-card-border rounded-xl p-5 flex flex-col items-start gap-2 hover:border-accent/40 transition-colors"
           >
-            <div className="flex items-center gap-3">
-              {author.photo ? (
-                <img
-                  src={author.photo}
-                  alt={author.name}
-                  className="w-10 h-10 rounded-full object-cover border border-card-border"
-                />
-              ) : (
-                <div className="w-10 h-10 rounded-full border border-card-border bg-white flex items-center justify-center text-muted text-sm font-medium">
-                  {author.name.charAt(0)}
-                </div>
-              )}
-              <div className="min-w-0">
-                <h3 className="text-sm font-semibold text-title leading-tight">
-                  {author.name} {author.lastname}
-                </h3>
-                <p className="text-xs text-tag">
-                  {author.countries}
-                </p>
+            {author.photo ? (
+              <img
+                src={author.photo}
+                alt={author.name}
+                className="w-16 h-16 rounded-full object-cover border border-card-border"
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-full border border-card-border bg-white flex items-center justify-center">
+                <svg className="w-7 h-7 text-muted opacity-50" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                </svg>
               </div>
+            )}
+            <div className="min-w-0">
+              <h3 className="text-sm font-semibold text-title leading-tight">
+                {author.name} {author.lastname}
+              </h3>
+              <p className="text-xs text-accent mt-0.5">
+                {author.countries}
+              </p>
+              <p className="text-xs text-muted mt-0.5">
+                {author.birthday && (
+                  <>
+                    {author.birthday}
+                    {author.death ? ` – ${author.death}` : ""}
+                  </>
+                )}
+              </p>
             </div>
-
-            <p className="text-xs text-muted mt-auto">
-              {author.birthday && (
-                <>
-                  {author.birthday}
-                  {author.death ? ` – ${author.death}` : ""}
-                </>
-              )}
-            </p>
           </Link>
         ))}
       </section>

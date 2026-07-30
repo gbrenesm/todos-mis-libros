@@ -17,7 +17,7 @@ export default function BookCard({ book }: BookCardProps) {
   const stars = ratingStars[book.rating] ?? 3;
 
   return (
-    <div className="bg-card-bg border border-card-border rounded-xl overflow-hidden flex flex-col max-w-48">
+    <div className="bg-card-bg border border-card-border rounded-xl overflow-hidden flex flex-col min-w-32 max-w-56">
       <Link href={`/books/${book.id}`}>
         <div className="aspect-2/3">
           {book.cover ? (
@@ -46,9 +46,15 @@ export default function BookCard({ book }: BookCardProps) {
             {book.name}
           </h3>
         </Link>
-        <p className="text-[9px] lg:text-[11px] text-muted line-clamp-1">
-          {book.authors}
-        </p>
+        {book.author_id ? (
+          <Link href={`/authors/${book.author_id}`} className="text-[9px] lg:text-[11px] text-muted line-clamp-1 hover:underline">
+            {book.authors}
+          </Link>
+        ) : (
+          <p className="text-[9px] lg:text-[11px] text-muted line-clamp-1">
+            {book.authors}
+          </p>
+        )}
 
         <div className="flex items-center justify-between mt-auto pt-0.5">
           <span className="text-[7px] lg:text-[9px] font-medium bg-tag text-tag-text rounded-full px-1.5 lg:px-2 py-0.5">

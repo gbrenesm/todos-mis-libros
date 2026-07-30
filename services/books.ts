@@ -161,6 +161,7 @@ export async function getBooks() {
       b.read_date,
       e.name AS editorial,
       STRING_AGG(DISTINCT CONCAT(a.name, ' ', COALESCE(a.lastname, '')), ', ') AS authors,
+      MIN(a.id::text) AS author_id,
       STRING_AGG(DISTINCT t.name, ', ') AS tags
     FROM books b
     LEFT JOIN editorials e ON b.editorial_id = e.id

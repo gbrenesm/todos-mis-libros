@@ -1,7 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { updateAuthor } from "@/services/authors";
+import { redirect } from "next/navigation";
+import { updateAuthor, deleteAuthor } from "@/services/authors";
+
+export async function deleteAuthorAction(formData: FormData) {
+  const id = formData.get("id") as string;
+  await deleteAuthor(id);
+  redirect("/authors");
+}
 
 export async function updateAuthorAction(formData: FormData) {
   const id = formData.get("id") as string;

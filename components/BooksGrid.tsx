@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import type { Book } from "@/types/book";
 import BookCard from "@/components/BookCard";
+
+const PAGE_SIZE = 30;
 
 type Props = {
   books: Book[];
@@ -36,7 +38,10 @@ export default function BooksGrid({ books, thisYear, favorites }: Props) {
   const [yearFilter, setYearFilter] = useState("");
   const [editionFilter, setEditionFilter] = useState("");
   const [tagFilter, setTagFilter] = useState("");
-  const [sortBy, setSortBy] = useState<SortOption>("name-asc");
+  const [formatFilter, setFormatFilter] = useState("");
+  const [sortBy, setSortBy] = useState<SortOption>("read-desc");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const loaderRef = useRef<HTMLDivElement>(null);
 
   const readYears = [...new Set(
     books.flatMap((b) => b.read_date?.map((d) => d.slice(0, 4)) ?? [])
@@ -59,6 +64,7 @@ export default function BooksGrid({ books, thisYear, favorites }: Props) {
       if (yearFilter && !b.read_date?.some((d) => d.startsWith(yearFilter))) return false;
       if (editionFilter && String(b.year) !== editionFilter) return false;
       if (tagFilter && !b.tags?.split(", ").includes(tagFilter)) return false;
+      if (formatFilter && b.format !== formatFilter) return false;
       const term = search.toLowerCase();
       return (
         b.name.toLowerCase().includes(term) ||
@@ -86,9 +92,32 @@ export default function BooksGrid({ books, thisYear, favorites }: Props) {
     });
 
     return result;
-  }, [books, fictionFilter, bookTypeFilter, ratingFilter, yearFilter, editionFilter, tagFilter, search, sortBy]);
+  }, [books, fictionFilter, bookTypeFilter, ratingFilter, yearFilter, editionFilter, tagFilter, formatFilter, search, sortBy]);
 
-  const hasActiveFilters = fictionFilter || bookTypeFilter || ratingFilter || yearFilter || editionFilter || tagFilter || sortBy !== "name-asc";
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [fictionFilter, bookTypeFilter, ratingFilter, yearFilter, editionFilter, tagFilter, formatFilter, search, sortBy]);
+
+  const loadMore = useCallback(() => {
+    setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, filtered.length));
+  }, [filtered.length]);
+
+  useEffect(() => {
+    const el = loaderRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) loadMore();
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [loadMore]);
+
+  const visibleBooks = filtered.slice(0, visibleCount);
+
+  const hasActiveFilters = fictionFilter || bookTypeFilter || ratingFilter || yearFilter || editionFilter || tagFilter || formatFilter || sortBy !== "read-desc";
 
   function clearAll() {
     setFictionFilter("");
@@ -97,7 +126,8 @@ export default function BooksGrid({ books, thisYear, favorites }: Props) {
     setYearFilter("");
     setEditionFilter("");
     setTagFilter("");
-    setSortBy("name-asc");
+    setFormatFilter("");
+    setSortBy("read-desc");
   }
 
   const activeFilters: { label: string; clear: () => void }[] = [];
@@ -107,9 +137,10 @@ export default function BooksGrid({ books, thisYear, favorites }: Props) {
   if (editionFilter) activeFilters.push({ label: `Ed. ${editionFilter}`, clear: () => setEditionFilter("") });
   if (ratingFilter) activeFilters.push({ label: ratingFilter, clear: () => setRatingFilter("") });
   if (tagFilter) activeFilters.push({ label: tagFilter, clear: () => setTagFilter("") });
-  if (sortBy !== "name-asc") activeFilters.push({ label: sortLabels[sortBy], clear: () => setSortBy("name-asc") });
+  if (formatFilter) activeFilters.push({ label: formatFilter, clear: () => setFormatFilter("") });
+  if (sortBy !== "read-desc") activeFilters.push({ label: sortLabels[sortBy], clear: () => setSortBy("read-desc") });
 
-  const hasFilters = fictionFilter || bookTypeFilter || ratingFilter || yearFilter || editionFilter || tagFilter || search;
+  const hasFilters = fictionFilter || bookTypeFilter || ratingFilter || yearFilter || editionFilter || tagFilter || formatFilter || search;
 
   return (
     <>
@@ -239,6 +270,20 @@ export default function BooksGrid({ books, thisYear, favorites }: Props) {
           </div>
 
           <div className="flex flex-col gap-2">
+            <span className="text-xs font-medium uppercase tracking-wide text-label">Formato</span>
+            <select
+              value={formatFilter}
+              onChange={(e) => setFormatFilter(e.target.value)}
+              className="bg-white border border-card-border rounded-lg px-3 pr-8 py-1.5 text-xs text-value"
+            >
+              <option value="">Todos</option>
+              <option value="físico">Físico</option>
+              <option value="digital">Digital</option>
+              <option value="audiolibro">Audiolibro</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-2">
             <span className="text-xs font-medium uppercase tracking-wide text-label">Ordenar por</span>
             <select
               value={sortBy}
@@ -284,11 +329,17 @@ export default function BooksGrid({ books, thisYear, favorites }: Props) {
         )}
       </div>
 
-      <section className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-4">
-        {filtered.map((book) => (
+      <section className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4">
+        {visibleBooks.map((book) => (
           <BookCard key={book.id} book={book} />
         ))}
       </section>
+
+      {visibleCount < filtered.length && (
+        <div ref={loaderRef} className="flex justify-center py-8">
+          <span className="text-sm text-muted">Cargando más libros...</span>
+        </div>
+      )}
 
       {filtered.length === 0 && (
         <p className="text-muted text-sm mt-4">No se encontraron libros.</p>
